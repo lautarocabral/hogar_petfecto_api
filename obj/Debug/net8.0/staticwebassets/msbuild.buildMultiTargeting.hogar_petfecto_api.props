@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\build\hogar_petfecto_api.props" />
+</Project>
