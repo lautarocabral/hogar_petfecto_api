@@ -2,6 +2,7 @@
 {
     public class Veterinaria : Perfil
     {
+        private Veterinaria() : base(default) { }
         public Veterinaria(TipoPerfil tipoPerfil, double latitud, double longitud, List<Suscripcion> suscripciones, string direccionLocal)
             : base(tipoPerfil) 
         {

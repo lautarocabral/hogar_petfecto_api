@@ -3,7 +3,10 @@ using alumnos_api.Services;
 using alumnos_api.Services.Interface;
 using hogar_petfecto_api.Services;
 using hogar_petfecto_api.Services.Interface;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,15 +28,37 @@ builder.Services.AddCors(options =>
                       });
 });
 
+
+// JWT implementation
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        ValidIssuer = "basilio_issuer",
+        ValidAudience = "basilio_audience",
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("tu_clave_secreta"))
+    };
+});
+
+
 // Database context configuration
 builder.Services.AddDbContext<GestionDbContext>(options =>
 {
     var config = builder.Configuration.GetConnectionString("DefaultConnection");
     options.UseSqlServer(config);
 });
-builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
-
+builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IPerfilManagerService, PerfilManagerService>();
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 var app = builder.Build();
 

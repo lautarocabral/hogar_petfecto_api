@@ -8,7 +8,7 @@ using alumnos_api.Models;
 
 #nullable disable
 
-namespace alumnos_api.Migrations
+namespace hogar_petfecto_api.Migrations
 {
     [DbContext(typeof(GestionDbContext))]
     partial class GestionDbContextModelSnapshot : ModelSnapshot
@@ -22,101 +22,793 @@ namespace alumnos_api.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("AlumnoMateria", b =>
+            modelBuilder.Entity("Usuario", b =>
                 {
-                    b.Property<int>("AlumnosAlumnoId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("MateriasMateriaId")
-                        .HasColumnType("int");
-
-                    b.HasKey("AlumnosAlumnoId", "MateriasMateriaId");
-
-                    b.HasIndex("MateriasMateriaId");
-
-                    b.ToTable("AlumnoMateria");
-                });
-
-            modelBuilder.Entity("alumnos_api.Models.Alumno", b =>
-                {
-                    b.Property<int>("AlumnoId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("AlumnoId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Contraseña")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PersonaDni")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PersonaDni")
+                        .IsUnique();
+
+                    b.ToTable("Usuarios");
+                });
+
+            modelBuilder.Entity("hogar_petfecto_api.Models.Adopcion", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("AdoptanteId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Contrato")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("Fecha")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("MascotaId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AdoptanteId");
+
+                    b.HasIndex("MascotaId");
+
+                    b.ToTable("Adopciones");
+                });
+
+            modelBuilder.Entity("hogar_petfecto_api.Models.Categoria", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Nombre")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("AlumnoId");
+                    b.HasKey("Id");
 
-                    b.ToTable("Alumnos");
+                    b.ToTable("Categorias");
                 });
 
-            modelBuilder.Entity("alumnos_api.Models.Materia", b =>
+            modelBuilder.Entity("hogar_petfecto_api.Models.EstadoPostulacion", b =>
                 {
-                    b.Property<int>("MateriaId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("MateriaId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Estado")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("EstadosPostulacion");
+                });
+
+            modelBuilder.Entity("hogar_petfecto_api.Models.LineaPedido", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("Cantidad")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("PedidoId")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("Precio")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("ProductoId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PedidoId");
+
+                    b.HasIndex("ProductoId");
+
+                    b.ToTable("LineasPedido");
+                });
+
+            modelBuilder.Entity("hogar_petfecto_api.Models.Localidad", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("LocalidadNombre")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("ProvinciaId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProvinciaId");
+
+                    b.ToTable("Localidades");
+                });
+
+            modelBuilder.Entity("hogar_petfecto_api.Models.Mascota", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("Adoptado")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("AptoDepto")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("AptoPerros")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("Castrado")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("FechaNacimiento")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Nombre")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("MateriaId");
+                    b.Property<double>("Peso")
+                        .HasColumnType("float");
 
-                    b.ToTable("Materias");
+                    b.Property<int?>("ProtectoraId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Sexo")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("TipoMascotaId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("Vacunado")
+                        .HasColumnType("bit");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProtectoraId");
+
+                    b.HasIndex("TipoMascotaId");
+
+                    b.ToTable("Mascotas");
                 });
 
-            modelBuilder.Entity("alumnos_api.Models.Nota", b =>
+            modelBuilder.Entity("hogar_petfecto_api.Models.OcCount", b =>
                 {
-                    b.Property<int>("NotaId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("NotaId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("Calificacion")
+                    b.Property<int>("NroOc")
                         .HasColumnType("int");
 
-                    b.Property<int?>("MateriaId")
-                        .HasColumnType("int");
+                    b.HasKey("Id");
 
-                    b.HasKey("NotaId");
-
-                    b.HasIndex("MateriaId");
-
-                    b.ToTable("Notas");
+                    b.ToTable("OcCounts");
                 });
 
-            modelBuilder.Entity("AlumnoMateria", b =>
+            modelBuilder.Entity("hogar_petfecto_api.Models.Pedido", b =>
                 {
-                    b.HasOne("alumnos_api.Models.Alumno", null)
-                        .WithMany()
-                        .HasForeignKey("AlumnosAlumnoId")
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ClienteId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("Fecha")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("FechaOrdenCompra")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("FechaPago")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("IdPago")
+                        .HasColumnType("int");
+
+                    b.Property<double>("Monto")
+                        .HasColumnType("float");
+
+                    b.Property<int>("NroOrdenCompra")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProtectoraId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("ProtectoraId1")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ClienteId");
+
+                    b.HasIndex("ProtectoraId");
+
+                    b.HasIndex("ProtectoraId1");
+
+                    b.ToTable("Pedidos");
+                });
+
+            modelBuilder.Entity("hogar_petfecto_api.Models.Perfil", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("PerfilTipo")
+                        .IsRequired()
+                        .HasMaxLength(13)
+                        .HasColumnType("nvarchar(13)");
+
+                    b.Property<string>("PersonaDni")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("TipoPerfilId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PersonaDni");
+
+                    b.HasIndex("TipoPerfilId");
+
+                    b.ToTable("Perfil");
+
+                    b.HasDiscriminator<string>("PerfilTipo").HasValue("Perfil");
+
+                    b.UseTphMappingStrategy();
+                });
+
+            modelBuilder.Entity("hogar_petfecto_api.Models.Persona", b =>
+                {
+                    b.Property<string>("Dni")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Direccion")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("FechaNacimiento")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("LocalidadId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("RazonSocial")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Telefono")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Dni");
+
+                    b.HasIndex("LocalidadId");
+
+                    b.ToTable("Personas");
+                });
+
+            modelBuilder.Entity("hogar_petfecto_api.Models.Postulacion", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("AdoptanteId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("EstadoId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("Fecha")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("MascotaId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AdoptanteId");
+
+                    b.HasIndex("EstadoId");
+
+                    b.HasIndex("MascotaId");
+
+                    b.ToTable("Postulaciones");
+                });
+
+            modelBuilder.Entity("hogar_petfecto_api.Models.Producto", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CategoriaId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Descripcion")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("Precio")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int?>("ProtectoraId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Stock")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CategoriaId");
+
+                    b.HasIndex("ProtectoraId");
+
+                    b.ToTable("Productos");
+                });
+
+            modelBuilder.Entity("hogar_petfecto_api.Models.Provincia", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ProvinciaNombre")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Provincias");
+                });
+
+            modelBuilder.Entity("hogar_petfecto_api.Models.Seguridad.Grupo", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("GrupoNombre")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("UsuarioId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UsuarioId");
+
+                    b.ToTable("Grupos");
+                });
+
+            modelBuilder.Entity("hogar_petfecto_api.Models.Seguridad.Permiso", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("PermisoNombre")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Permisos");
+                });
+
+            modelBuilder.Entity("hogar_petfecto_api.Models.Suscripcion", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("Estado")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("FechaFin")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("FechaInicio")
+                        .HasColumnType("datetime2");
+
+                    b.Property<double>("Monto")
+                        .HasColumnType("float");
+
+                    b.Property<int?>("VeterinariaId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("VeterinariaId");
+
+                    b.ToTable("Suscripciones");
+                });
+
+            modelBuilder.Entity("hogar_petfecto_api.Models.TipoMascota", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Tipo")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("TiposMascota");
+                });
+
+            modelBuilder.Entity("hogar_petfecto_api.Models.TipoPerfil", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Descripcion")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("TiposPerfil");
+                });
+
+            modelBuilder.Entity("hogar_petfecto_api.Models.Perfiles.Adoptante", b =>
+                {
+                    b.HasBaseType("hogar_petfecto_api.Models.Perfil");
+
+                    b.Property<string>("EstadoCivil")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("ExperienciaMascotas")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("FechaNacimiento")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("NroMascotas")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Ocupacion")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasDiscriminator().HasValue("Adoptante");
+                });
+
+            modelBuilder.Entity("hogar_petfecto_api.Models.Perfiles.Cliente", b =>
+                {
+                    b.HasBaseType("hogar_petfecto_api.Models.Perfil");
+
+                    b.Property<string>("Cuil")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Ocupacion")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.ToTable("Perfil", t =>
+                        {
+                            t.Property("Ocupacion")
+                                .HasColumnName("Cliente_Ocupacion");
+                        });
+
+                    b.HasDiscriminator().HasValue("Cliente");
+                });
+
+            modelBuilder.Entity("hogar_petfecto_api.Models.Perfiles.Protectora", b =>
+                {
+                    b.HasBaseType("hogar_petfecto_api.Models.Perfil");
+
+                    b.Property<int>("CantidadInicialMascotas")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Capacidad")
+                        .HasColumnType("int");
+
+                    b.Property<int>("NroVoluntarios")
+                        .HasColumnType("int");
+
+                    b.HasDiscriminator().HasValue("Protectora");
+                });
+
+            modelBuilder.Entity("hogar_petfecto_api.Models.Perfiles.Veterinaria", b =>
+                {
+                    b.HasBaseType("hogar_petfecto_api.Models.Perfil");
+
+                    b.Property<string>("DireccionLocal")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<double>("Latitud")
+                        .HasColumnType("float");
+
+                    b.Property<double>("Longitud")
+                        .HasColumnType("float");
+
+                    b.HasDiscriminator().HasValue("Veterinaria");
+                });
+
+            modelBuilder.Entity("Usuario", b =>
+                {
+                    b.HasOne("hogar_petfecto_api.Models.Persona", "Persona")
+                        .WithOne("Usuario")
+                        .HasForeignKey("Usuario", "PersonaDni")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("alumnos_api.Models.Materia", null)
+                    b.Navigation("Persona");
+                });
+
+            modelBuilder.Entity("hogar_petfecto_api.Models.Adopcion", b =>
+                {
+                    b.HasOne("hogar_petfecto_api.Models.Perfiles.Adoptante", "Adoptante")
                         .WithMany()
-                        .HasForeignKey("MateriasMateriaId")
+                        .HasForeignKey("AdoptanteId")
                         .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("hogar_petfecto_api.Models.Mascota", "Mascota")
+                        .WithMany()
+                        .HasForeignKey("MascotaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Adoptante");
+
+                    b.Navigation("Mascota");
+                });
+
+            modelBuilder.Entity("hogar_petfecto_api.Models.LineaPedido", b =>
+                {
+                    b.HasOne("hogar_petfecto_api.Models.Pedido", null)
+                        .WithMany("LineaPedido")
+                        .HasForeignKey("PedidoId");
+
+                    b.HasOne("hogar_petfecto_api.Models.Producto", "Producto")
+                        .WithMany()
+                        .HasForeignKey("ProductoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Producto");
+                });
+
+            modelBuilder.Entity("hogar_petfecto_api.Models.Localidad", b =>
+                {
+                    b.HasOne("hogar_petfecto_api.Models.Provincia", "Provincia")
+                        .WithMany()
+                        .HasForeignKey("ProvinciaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Provincia");
+                });
+
+            modelBuilder.Entity("hogar_petfecto_api.Models.Mascota", b =>
+                {
+                    b.HasOne("hogar_petfecto_api.Models.Perfiles.Protectora", null)
+                        .WithMany("Mascotas")
+                        .HasForeignKey("ProtectoraId");
+
+                    b.HasOne("hogar_petfecto_api.Models.TipoMascota", "TipoMascota")
+                        .WithMany()
+                        .HasForeignKey("TipoMascotaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("TipoMascota");
+                });
+
+            modelBuilder.Entity("hogar_petfecto_api.Models.Pedido", b =>
+                {
+                    b.HasOne("hogar_petfecto_api.Models.Perfiles.Cliente", "Cliente")
+                        .WithMany()
+                        .HasForeignKey("ClienteId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("hogar_petfecto_api.Models.Perfiles.Protectora", "Protectora")
+                        .WithMany()
+                        .HasForeignKey("ProtectoraId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("hogar_petfecto_api.Models.Perfiles.Protectora", null)
+                        .WithMany("Pedidos")
+                        .HasForeignKey("ProtectoraId1");
+
+                    b.Navigation("Cliente");
+
+                    b.Navigation("Protectora");
+                });
+
+            modelBuilder.Entity("hogar_petfecto_api.Models.Perfil", b =>
+                {
+                    b.HasOne("hogar_petfecto_api.Models.Persona", null)
+                        .WithMany("Perfiles")
+                        .HasForeignKey("PersonaDni");
+
+                    b.HasOne("hogar_petfecto_api.Models.TipoPerfil", "TipoPerfil")
+                        .WithMany()
+                        .HasForeignKey("TipoPerfilId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("TipoPerfil");
+                });
+
+            modelBuilder.Entity("hogar_petfecto_api.Models.Persona", b =>
+                {
+                    b.HasOne("hogar_petfecto_api.Models.Localidad", "Localidad")
+                        .WithMany()
+                        .HasForeignKey("LocalidadId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Localidad");
+                });
+
+            modelBuilder.Entity("hogar_petfecto_api.Models.Postulacion", b =>
+                {
+                    b.HasOne("hogar_petfecto_api.Models.Perfiles.Adoptante", "Adoptante")
+                        .WithMany()
+                        .HasForeignKey("AdoptanteId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("hogar_petfecto_api.Models.EstadoPostulacion", "Estado")
+                        .WithMany()
+                        .HasForeignKey("EstadoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("hogar_petfecto_api.Models.Mascota", "Mascota")
+                        .WithMany()
+                        .HasForeignKey("MascotaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Adoptante");
+
+                    b.Navigation("Estado");
+
+                    b.Navigation("Mascota");
+                });
+
+            modelBuilder.Entity("hogar_petfecto_api.Models.Producto", b =>
+                {
+                    b.HasOne("hogar_petfecto_api.Models.Categoria", "Categoria")
+                        .WithMany()
+                        .HasForeignKey("CategoriaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("hogar_petfecto_api.Models.Perfiles.Protectora", null)
+                        .WithMany("Productos")
+                        .HasForeignKey("ProtectoraId");
+
+                    b.Navigation("Categoria");
+                });
+
+            modelBuilder.Entity("hogar_petfecto_api.Models.Seguridad.Grupo", b =>
+                {
+                    b.HasOne("Usuario", null)
+                        .WithMany("Grupos")
+                        .HasForeignKey("UsuarioId");
+                });
+
+            modelBuilder.Entity("hogar_petfecto_api.Models.Suscripcion", b =>
+                {
+                    b.HasOne("hogar_petfecto_api.Models.Perfiles.Veterinaria", null)
+                        .WithMany("Suscripciones")
+                        .HasForeignKey("VeterinariaId");
+                });
+
+            modelBuilder.Entity("Usuario", b =>
+                {
+                    b.Navigation("Grupos");
+                });
+
+            modelBuilder.Entity("hogar_petfecto_api.Models.Pedido", b =>
+                {
+                    b.Navigation("LineaPedido");
+                });
+
+            modelBuilder.Entity("hogar_petfecto_api.Models.Persona", b =>
+                {
+                    b.Navigation("Perfiles");
+
+                    b.Navigation("Usuario")
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("alumnos_api.Models.Nota", b =>
+            modelBuilder.Entity("hogar_petfecto_api.Models.Perfiles.Protectora", b =>
                 {
-                    b.HasOne("alumnos_api.Models.Materia", null)
-                        .WithMany("Notas")
-                        .HasForeignKey("MateriaId");
+                    b.Navigation("Mascotas");
+
+                    b.Navigation("Pedidos");
+
+                    b.Navigation("Productos");
                 });
 
-            modelBuilder.Entity("alumnos_api.Models.Materia", b =>
+            modelBuilder.Entity("hogar_petfecto_api.Models.Perfiles.Veterinaria", b =>
                 {
-                    b.Navigation("Notas");
+                    b.Navigation("Suscripciones");
                 });
 #pragma warning restore 612, 618
         }

@@ -1,9 +1,11 @@
 ﻿using hogar_petfecto_api.Models.Seguridad;
+using System.ComponentModel.DataAnnotations;
 
 namespace hogar_petfecto_api.Models
 {
     public class Persona
     {
+        private Persona() { }
         public Persona(string dni, string razonSocial, Localidad localidad, string direccion, string telefono, DateTime fechaNacimiento, List<Perfil> perfiles)
         {
             Dni = dni;
@@ -14,7 +16,7 @@ namespace hogar_petfecto_api.Models
             FechaNacimiento = fechaNacimiento;
             Perfiles = perfiles;
         }
-
+        [Key]
         public string Dni { get; private set; }
         public string RazonSocial { get; private set; }
         public Localidad Localidad { get; private set; }

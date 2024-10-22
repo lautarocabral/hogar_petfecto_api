@@ -1,5 +1,5 @@
 ﻿using alumnos_api.Models;
-using hogar_petfecto_api.Models.hogar_petfecto_api.Models;
+using hogar_petfecto_api.Models;
 using hogar_petfecto_api.Models.Perfiles;
 
 namespace hogar_petfecto_api.Services.Interface

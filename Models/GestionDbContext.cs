@@ -2,14 +2,14 @@
 using hogar_petfecto_api.Models.Perfiles;
 using hogar_petfecto_api.Models.Seguridad;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration; 
+using Microsoft.Extensions.Configuration;
 
 namespace alumnos_api.Models
 {
-    public class GestionDbContext : DbContext 
+    public class GestionDbContext : DbContext
     {
         protected readonly IConfiguration Configuration;
-        public GestionDbContext(IConfiguration configuration) : base() 
+        public GestionDbContext(IConfiguration configuration) : base()
         {
             Configuration = configuration;
         }
@@ -22,6 +22,30 @@ namespace alumnos_api.Models
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+         modelBuilder.Entity<Pedido>()
+                .HasOne(p => p.Cliente)
+                .WithMany() // No hay una colección en Cliente que apunte a Pedido
+                .HasForeignKey("ClienteId") // Configura la clave foránea
+                .OnDelete(DeleteBehavior.Restrict); // Usar Restrict para evitar problemas de cascada
+
+            modelBuilder.Entity<Pedido>()
+                .HasOne(p => p.Protectora)
+                .WithMany() // No hay una colección en Protectora que apunte a Pedido
+                .HasForeignKey("ProtectoraId") // Configura la clave foránea
+                .OnDelete(DeleteBehavior.Restrict); // Usar Restrict para evitar problemas de cascada
+
+            modelBuilder.Entity<Perfil>()
+                .HasDiscriminator<string>("PerfilTipo")
+                .HasValue<Cliente>("Cliente")
+                .HasValue<Protectora>("Protectora");
+
+            modelBuilder.Entity<Usuario>()
+                .HasOne(u => u.Persona)
+                .WithOne(p => p.Usuario)
+                .HasForeignKey<Usuario>(u => u.PersonaDni) // Configura PersonaDni como clave foránea
+                .IsRequired();
+
+            base.OnModelCreating(modelBuilder);
         }
 
         public DbSet<Adoptante> Adoptantes { get; set; }

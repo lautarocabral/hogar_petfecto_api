@@ -2,7 +2,7 @@
 {
     public class Adoptante : Perfil
     {
-        // Constructor público que inicializa Adoptante y llama al constructor de la clase base Perfil
+        private Adoptante() : base(default) { }
         public Adoptante(TipoPerfil tipoPerfil, DateTime fechaNacimiento, string estadoCivil, string ocupacion, bool experienciaMascotas, int nroMascotas)
             : base(tipoPerfil)
         {

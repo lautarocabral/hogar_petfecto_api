@@ -2,7 +2,7 @@
 {
     public class Protectora : Perfil
     {
-        // Constructor que inicializa Protectora y llama al constructor base Perfil
+        private Protectora() : base(default) { }
         public Protectora(TipoPerfil tipoPerfil, int capacidad, int nroVoluntarios, List<Pedido> pedidos, List<Producto> productos, List<Mascota> mascotas)
             : base(tipoPerfil) // Llama al constructor de Perfil
         {

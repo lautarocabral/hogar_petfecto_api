@@ -2,10 +2,15 @@
 {
     public class OcCount
     {
+        public OcCount()
+        {
+
+        }
         public OcCount(int nroOc)
         {
             NroOc = nroOc;
         }
+        public int Id { get; private set; }
 
         public int NroOc { get; private set; }
 

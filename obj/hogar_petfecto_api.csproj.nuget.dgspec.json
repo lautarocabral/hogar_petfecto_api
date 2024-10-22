@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\lautaro\\Documents\\Repos\\alumnos_api\\hogar_petfecto_api.csproj": {}
+    "C:\\Users\\lautaro\\Documents\\Repos\\hogar_petfecto_api\\hogar_petfecto_api.csproj": {}
   },
   "projects": {
-    "C:\\Users\\lautaro\\Documents\\Repos\\alumnos_api\\hogar_petfecto_api.csproj": {
+    "C:\\Users\\lautaro\\Documents\\Repos\\hogar_petfecto_api\\hogar_petfecto_api.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\lautaro\\Documents\\Repos\\alumnos_api\\hogar_petfecto_api.csproj",
+        "projectUniqueName": "C:\\Users\\lautaro\\Documents\\Repos\\hogar_petfecto_api\\hogar_petfecto_api.csproj",
         "projectName": "hogar_petfecto_api",
-        "projectPath": "C:\\Users\\lautaro\\Documents\\Repos\\alumnos_api\\hogar_petfecto_api.csproj",
+        "projectPath": "C:\\Users\\lautaro\\Documents\\Repos\\hogar_petfecto_api\\hogar_petfecto_api.csproj",
         "packagesPath": "C:\\Users\\lautaro\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\lautaro\\Documents\\Repos\\alumnos_api\\obj\\",
+        "outputPath": "C:\\Users\\lautaro\\Documents\\Repos\\hogar_petfecto_api\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\lautaro\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -45,6 +45,10 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "dependencies": {
+            "Microsoft.AspNetCore.Authentication.JwtBearer": {
+              "target": "Package",
+              "version": "[8.0.10, )"
+            },
             "Microsoft.EntityFrameworkCore": {
               "target": "Package",
               "version": "[8.0.4, )"

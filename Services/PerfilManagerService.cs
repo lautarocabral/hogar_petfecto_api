@@ -1,6 +1,5 @@
 ﻿using alumnos_api.Models;
 using hogar_petfecto_api.Models;
-using hogar_petfecto_api.Models.hogar_petfecto_api.Models;
 using hogar_petfecto_api.Models.Perfiles;
 using hogar_petfecto_api.Services.Interface;
 using Microsoft.EntityFrameworkCore;
@@ -168,17 +167,7 @@ namespace hogar_petfecto_api.Services
             // Obtener la latitud y longitud usando el servicio de geocodificación
             try
             {
-                var geocodingService = new GeocodingService();
-                var (latitud, longitud) = await geocodingService.GetLatLongFromAddressAsync(veterinaria.DireccionLocal);
-
-                // Validar si ya existe una veterinaria en la misma ubicación
-                var existingVeterinaria = await _context.Veterinarias
-                    .FirstOrDefaultAsync(v => v.Latitud == latitud && v.Longitud == longitud);
-
-                if (existingVeterinaria != null)
-                {
-                    return ApiResponse<Veterinaria>.Error("Ya existe una veterinaria con la misma ubicación.");
-                }
+               
 
                 // Buscar el tipo de perfil 'Veterinaria'
                 TipoPerfil tipoPerfilVeterinaria = await _context.TiposPerfil.FirstOrDefaultAsync(p => p.Descripcion == "Veterinaria");
@@ -189,7 +178,7 @@ namespace hogar_petfecto_api.Services
                 }
 
                 // Crear una nueva veterinaria con latitud y longitud obtenidas
-                Veterinaria newVeterinaria = new Veterinaria(tipoPerfilVeterinaria, latitud, longitud, veterinaria.Suscripciones, veterinaria.DireccionLocal);
+                Veterinaria newVeterinaria = new Veterinaria(tipoPerfilVeterinaria, veterinaria.Latitud, veterinaria.Longitud, veterinaria.Suscripciones, veterinaria.DireccionLocal);
 
                 _context.Veterinarias.Add(newVeterinaria);
                 await _context.SaveChangesAsync();

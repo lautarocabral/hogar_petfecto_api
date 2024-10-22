@@ -2,6 +2,7 @@
 {
     public class Cliente : Perfil
     {
+        private Cliente() : base(default) { }
         public Cliente(TipoPerfil tipoPerfil, string cuil, string ocupacion) : base(tipoPerfil)
         {
             Cuil = cuil;

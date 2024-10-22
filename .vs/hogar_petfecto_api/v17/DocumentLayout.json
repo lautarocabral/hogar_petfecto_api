@@ -1,34 +1,26 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "C:\\Users\\lautaro\\Documents\\Repos\\alumnos_api\\",
+  "WorkspaceRootPath": "C:\\Users\\lautaro\\Documents\\Repos\\hogar_petfecto_api\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{BD318B38-C782-41E9-A3FB-22DBC46F3CDE}|hogar_petfecto_api.csproj|c:\\users\\lautaro\\documents\\repos\\alumnos_api\\services\\geocodingservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{BD318B38-C782-41E9-A3FB-22DBC46F3CDE}|hogar_petfecto_api.csproj|solutionrelative:services\\geocodingservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{BD318B38-C782-41E9-A3FB-22DBC46F3CDE}|hogar_petfecto_api.csproj|c:\\users\\lautaro\\documents\\repos\\hogar_petfecto_api\\controllers\\seguridad\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BD318B38-C782-41E9-A3FB-22DBC46F3CDE}|hogar_petfecto_api.csproj|solutionrelative:controllers\\seguridad\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{BD318B38-C782-41E9-A3FB-22DBC46F3CDE}|hogar_petfecto_api.csproj|c:\\users\\lautaro\\documents\\repos\\alumnos_api\\services\\perfilmanagerservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{BD318B38-C782-41E9-A3FB-22DBC46F3CDE}|hogar_petfecto_api.csproj|solutionrelative:services\\perfilmanagerservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{BD318B38-C782-41E9-A3FB-22DBC46F3CDE}|hogar_petfecto_api.csproj|c:\\users\\lautaro\\documents\\repos\\hogar_petfecto_api\\services\\authservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BD318B38-C782-41E9-A3FB-22DBC46F3CDE}|hogar_petfecto_api.csproj|solutionrelative:services\\authservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{BD318B38-C782-41E9-A3FB-22DBC46F3CDE}|hogar_petfecto_api.csproj|c:\\users\\lautaro\\documents\\repos\\alumnos_api\\services\\interface\\iperfilmanagerservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{BD318B38-C782-41E9-A3FB-22DBC46F3CDE}|hogar_petfecto_api.csproj|solutionrelative:services\\interface\\iperfilmanagerservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{BD318B38-C782-41E9-A3FB-22DBC46F3CDE}|hogar_petfecto_api.csproj|c:\\users\\lautaro\\documents\\repos\\hogar_petfecto_api\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{BD318B38-C782-41E9-A3FB-22DBC46F3CDE}|hogar_petfecto_api.csproj|solutionrelative:appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{BD318B38-C782-41E9-A3FB-22DBC46F3CDE}|hogar_petfecto_api.csproj|c:\\users\\lautaro\\documents\\repos\\alumnos_api\\services\\interface\\igeocodingservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{BD318B38-C782-41E9-A3FB-22DBC46F3CDE}|hogar_petfecto_api.csproj|solutionrelative:services\\interface\\igeocodingservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{BD318B38-C782-41E9-A3FB-22DBC46F3CDE}|hogar_petfecto_api.csproj|c:\\users\\lautaro\\documents\\repos\\hogar_petfecto_api\\models\\localidad.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BD318B38-C782-41E9-A3FB-22DBC46F3CDE}|hogar_petfecto_api.csproj|solutionrelative:models\\localidad.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{BD318B38-C782-41E9-A3FB-22DBC46F3CDE}|hogar_petfecto_api.csproj|c:\\users\\lautaro\\documents\\repos\\alumnos_api\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{BD318B38-C782-41E9-A3FB-22DBC46F3CDE}|hogar_petfecto_api.csproj|c:\\users\\lautaro\\documents\\repos\\hogar_petfecto_api\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{BD318B38-C782-41E9-A3FB-22DBC46F3CDE}|hogar_petfecto_api.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{BD318B38-C782-41E9-A3FB-22DBC46F3CDE}|hogar_petfecto_api.csproj|c:\\users\\lautaro\\documents\\repos\\alumnos_api\\models\\perfiles\\veterinaria.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{BD318B38-C782-41E9-A3FB-22DBC46F3CDE}|hogar_petfecto_api.csproj|solutionrelative:models\\perfiles\\veterinaria.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{BD318B38-C782-41E9-A3FB-22DBC46F3CDE}|hogar_petfecto_api.csproj|c:\\users\\lautaro\\documents\\repos\\alumnos_api\\services\\unitofwork.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{BD318B38-C782-41E9-A3FB-22DBC46F3CDE}|hogar_petfecto_api.csproj|solutionrelative:services\\unitofwork.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -42,93 +34,67 @@
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "IGeocodingService.cs",
-              "DocumentMoniker": "C:\\Users\\lautaro\\Documents\\Repos\\alumnos_api\\Services\\Interface\\IGeocodingService.cs",
-              "RelativeDocumentMoniker": "Services\\Interface\\IGeocodingService.cs",
-              "ToolTip": "C:\\Users\\lautaro\\Documents\\Repos\\alumnos_api\\Services\\Interface\\IGeocodingService.cs",
-              "RelativeToolTip": "Services\\Interface\\IGeocodingService.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAA4AAAAAAAAA",
+              "DocumentIndex": 1,
+              "Title": "AuthService.cs",
+              "DocumentMoniker": "C:\\Users\\lautaro\\Documents\\Repos\\hogar_petfecto_api\\Services\\AuthService.cs",
+              "RelativeDocumentMoniker": "Services\\AuthService.cs",
+              "ToolTip": "C:\\Users\\lautaro\\Documents\\Repos\\hogar_petfecto_api\\Services\\AuthService.cs",
+              "RelativeToolTip": "Services\\AuthService.cs",
+              "ViewState": "AQIAADwAAAAAAAAAAAAAAFQAAAAMAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-10-15T01:15:00.687Z",
+              "WhenOpened": "2024-10-22T02:23:46.821Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "C:\\Users\\lautaro\\Documents\\Repos\\hogar_petfecto_api\\appsettings.json",
+              "RelativeDocumentMoniker": "appsettings.json",
+              "ToolTip": "C:\\Users\\lautaro\\Documents\\Repos\\hogar_petfecto_api\\appsettings.json",
+              "RelativeToolTip": "appsettings.json",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAwAAAA2AAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2024-10-22T02:20:48.89Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "Localidad.cs",
+              "DocumentMoniker": "C:\\Users\\lautaro\\Documents\\Repos\\hogar_petfecto_api\\Models\\Localidad.cs",
+              "RelativeDocumentMoniker": "Models\\Localidad.cs",
+              "ToolTip": "C:\\Users\\lautaro\\Documents\\Repos\\hogar_petfecto_api\\Models\\Localidad.cs",
+              "RelativeToolTip": "Models\\Localidad.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAABIAAAAYAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-10-22T02:11:12.12Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 4,
               "Title": "Program.cs",
-              "DocumentMoniker": "C:\\Users\\lautaro\\Documents\\Repos\\alumnos_api\\Program.cs",
+              "DocumentMoniker": "C:\\Users\\lautaro\\Documents\\Repos\\hogar_petfecto_api\\Program.cs",
               "RelativeDocumentMoniker": "Program.cs",
-              "ToolTip": "C:\\Users\\lautaro\\Documents\\Repos\\alumnos_api\\Program.cs",
+              "ToolTip": "C:\\Users\\lautaro\\Documents\\Repos\\hogar_petfecto_api\\Program.cs",
               "RelativeToolTip": "Program.cs",
-              "ViewState": "AQIAAAwAAAAAAAAAAAAAACMAAABKAAAA",
+              "ViewState": "AQIAABwAAAAAAAAAAAAAADoAAAA4AAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-10-15T01:14:04.975Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "IPerfilManagerService.cs",
-              "DocumentMoniker": "C:\\Users\\lautaro\\Documents\\Repos\\alumnos_api\\Services\\Interface\\IPerfilManagerService.cs",
-              "RelativeDocumentMoniker": "Services\\Interface\\IPerfilManagerService.cs",
-              "ToolTip": "C:\\Users\\lautaro\\Documents\\Repos\\alumnos_api\\Services\\Interface\\IPerfilManagerService.cs",
-              "RelativeToolTip": "Services\\Interface\\IPerfilManagerService.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAqwAsAAABSAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-10-15T01:12:54.122Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "Veterinaria.cs",
-              "DocumentMoniker": "C:\\Users\\lautaro\\Documents\\Repos\\alumnos_api\\Models\\Perfiles\\Veterinaria.cs",
-              "RelativeDocumentMoniker": "Models\\Perfiles\\Veterinaria.cs",
-              "ToolTip": "C:\\Users\\lautaro\\Documents\\Repos\\alumnos_api\\Models\\Perfiles\\Veterinaria.cs",
-              "RelativeToolTip": "Models\\Perfiles\\Veterinaria.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAqwAsAAAAJAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-10-15T01:03:36.165Z",
+              "WhenOpened": "2024-10-22T01:42:42.95Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "GeocodingService.cs",
-              "DocumentMoniker": "C:\\Users\\lautaro\\Documents\\Repos\\alumnos_api\\Services\\GeocodingService.cs",
-              "RelativeDocumentMoniker": "Services\\GeocodingService.cs",
-              "ToolTip": "C:\\Users\\lautaro\\Documents\\Repos\\alumnos_api\\Services\\GeocodingService.cs",
-              "RelativeToolTip": "Services\\GeocodingService.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAABsAAAAoAAAA",
+              "Title": "AuthController.cs",
+              "DocumentMoniker": "C:\\Users\\lautaro\\Documents\\Repos\\hogar_petfecto_api\\Controllers\\Seguridad\\AuthController.cs",
+              "RelativeDocumentMoniker": "Controllers\\Seguridad\\AuthController.cs",
+              "ToolTip": "C:\\Users\\lautaro\\Documents\\Repos\\hogar_petfecto_api\\Controllers\\Seguridad\\AuthController.cs",
+              "RelativeToolTip": "Controllers\\Seguridad\\AuthController.cs",
+              "ViewState": "AQIAACMAAAAAAAAAAAAgwDwAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-10-15T00:59:35.369Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "PerfilManagerService.cs",
-              "DocumentMoniker": "C:\\Users\\lautaro\\Documents\\Repos\\alumnos_api\\Services\\PerfilManagerService.cs",
-              "RelativeDocumentMoniker": "Services\\PerfilManagerService.cs",
-              "ToolTip": "C:\\Users\\lautaro\\Documents\\Repos\\alumnos_api\\Services\\PerfilManagerService.cs",
-              "RelativeToolTip": "Services\\PerfilManagerService.cs",
-              "ViewState": "AQIAAJsAAAAAAAAAAAAIwKsAAABbAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-10-15T00:34:46.108Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 6,
-              "Title": "UnitOfWork.cs",
-              "DocumentMoniker": "C:\\Users\\lautaro\\Documents\\Repos\\alumnos_api\\Services\\UnitOfWork.cs",
-              "RelativeDocumentMoniker": "Services\\UnitOfWork.cs",
-              "ToolTip": "C:\\Users\\lautaro\\Documents\\Repos\\alumnos_api\\Services\\UnitOfWork.cs",
-              "RelativeToolTip": "Services\\UnitOfWork.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAqwAsAAABPAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-10-15T00:25:48.529Z",
+              "WhenOpened": "2024-10-22T01:13:31.005Z",
               "EditorCaption": ""
             }
           ]
