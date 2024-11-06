@@ -37,10 +37,9 @@ namespace hogar_petfecto_api.Controllers.Seguridad
 
             var token = _unitOfWork.AuthService.GenerarToken(usuario);
 
-            // Usa AutoMapper para mapear el usuario a UsuarioDto
+            
             var usuarioDto = _mapper.Map<UsuarioDto>(usuario);
 
-            // Crea el LoginResponseDto
             var response = new LoginResponseDto
             {
                 token = token,

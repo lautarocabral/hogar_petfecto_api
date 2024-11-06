@@ -11,7 +11,6 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -29,7 +28,6 @@ builder.Services.AddCors(options =>
                           policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
                       });
 });
-
 
 // JWT implementation
 builder.Services.AddAuthentication(options =>
@@ -51,7 +49,6 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
-
 // Database context configuration
 builder.Services.AddDbContext<GestionDbContext>(options =>
 {
@@ -71,14 +68,13 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-
-
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 
 app.UseRouting();
 
 app.UseCors(MyAllowSpecificOrigins); 
 
+app.UseAuthentication(); // Esta línea es esencial para la autenticación JWT
 app.UseAuthorization();
 
 app.MapControllers();
