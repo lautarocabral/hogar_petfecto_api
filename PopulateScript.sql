@@ -41,12 +41,13 @@ INSERT INTO Localidades (LocalidadNombre, ProvinciaId) VALUES ('Cafayate', 5);
 
 
 --{
---  "dni": "12345678",
+--  "dni": "34585885",
 --  "razonSocial": "Juan Perez",
 --  "localidadId": 1,
 --  "direccion": "Calle Falsa 123",
 --  "telefono": "+54 9 11 1234 5678",
 --  "fechaNacimiento": "1990-05-15T00:00:00",
---  "email": "juan.perez@example.com",
---  "password": "password123"
+--  "email": "lautaro.cabral@gmail.com",
+--  "password": "admin"
 --}
+

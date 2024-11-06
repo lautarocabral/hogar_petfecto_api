@@ -13,6 +13,8 @@
 
         public int Id { get; private set; }
         public string ProvinciaNombre { get; private set; }
+
+        public virtual ICollection<Localidad> Localidades { get; set; }
     }
 
 }

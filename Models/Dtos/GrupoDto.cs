@@ -2,8 +2,12 @@
 {
     public class GrupoDto
     {
+        public GrupoDto()
+        {
+            
+        }
         public int Id { get; set; }
-        public string GrupoNombre { get; set; }
-        public List<PermisoDto> PermisoDtos { get; set; }
+        public string Descripcion { get; set; }
+        public List<PermisoDto> Permisos { get; set; }
     }
 }

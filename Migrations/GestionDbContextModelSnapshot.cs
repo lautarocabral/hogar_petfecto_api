@@ -22,6 +22,36 @@ namespace hogar_petfecto_api.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("GrupoPermiso", b =>
+                {
+                    b.Property<int>("GruposId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PermisosId")
+                        .HasColumnType("int");
+
+                    b.HasKey("GruposId", "PermisosId");
+
+                    b.HasIndex("PermisosId");
+
+                    b.ToTable("GrupoPermiso");
+                });
+
+            modelBuilder.Entity("GrupoUsuario", b =>
+                {
+                    b.Property<int>("GruposId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UsuariosId")
+                        .HasColumnType("int");
+
+                    b.HasKey("GruposId", "UsuariosId");
+
+                    b.HasIndex("UsuariosId");
+
+                    b.ToTable("GrupoUsuario");
+                });
+
             modelBuilder.Entity("Usuario", b =>
                 {
                     b.Property<int>("Id")
@@ -430,16 +460,11 @@ namespace hogar_petfecto_api.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("GrupoNombre")
+                    b.Property<string>("Descripcion")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("UsuarioId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("UsuarioId");
 
                     b.ToTable("Grupos");
                 });
@@ -452,7 +477,11 @@ namespace hogar_petfecto_api.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("PermisoNombre")
+                    b.Property<string>("Descripcion")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NombrePermiso")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -601,6 +630,36 @@ namespace hogar_petfecto_api.Migrations
                         .HasColumnType("float");
 
                     b.HasDiscriminator().HasValue("Veterinaria");
+                });
+
+            modelBuilder.Entity("GrupoPermiso", b =>
+                {
+                    b.HasOne("hogar_petfecto_api.Models.Seguridad.Grupo", null)
+                        .WithMany()
+                        .HasForeignKey("GruposId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("hogar_petfecto_api.Models.Seguridad.Permiso", null)
+                        .WithMany()
+                        .HasForeignKey("PermisosId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("GrupoUsuario", b =>
+                {
+                    b.HasOne("hogar_petfecto_api.Models.Seguridad.Grupo", null)
+                        .WithMany()
+                        .HasForeignKey("GruposId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Usuario", null)
+                        .WithMany()
+                        .HasForeignKey("UsuariosId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Usuario", b =>
@@ -765,23 +824,11 @@ namespace hogar_petfecto_api.Migrations
                     b.Navigation("Categoria");
                 });
 
-            modelBuilder.Entity("hogar_petfecto_api.Models.Seguridad.Grupo", b =>
-                {
-                    b.HasOne("Usuario", null)
-                        .WithMany("Grupos")
-                        .HasForeignKey("UsuarioId");
-                });
-
             modelBuilder.Entity("hogar_petfecto_api.Models.Suscripcion", b =>
                 {
                     b.HasOne("hogar_petfecto_api.Models.Perfiles.Veterinaria", null)
                         .WithMany("Suscripciones")
                         .HasForeignKey("VeterinariaId");
-                });
-
-            modelBuilder.Entity("Usuario", b =>
-                {
-                    b.Navigation("Grupos");
                 });
 
             modelBuilder.Entity("hogar_petfecto_api.Models.Pedido", b =>

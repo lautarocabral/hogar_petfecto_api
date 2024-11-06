@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace hogar_petfecto_api.Migrations
 {
     /// <inheritdoc />
-    public partial class UpdatedModelsMigration : Migration
+    public partial class FinalMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -38,6 +38,19 @@ namespace hogar_petfecto_api.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Grupos",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Descripcion = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Grupos", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "OcCounts",
                 columns: table => new
                 {
@@ -56,7 +69,8 @@ namespace hogar_petfecto_api.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    PermisoNombre = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Descripcion = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    NombrePermiso = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -100,6 +114,30 @@ namespace hogar_petfecto_api.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_TiposPerfil", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "GrupoPermiso",
+                columns: table => new
+                {
+                    GruposId = table.Column<int>(type: "int", nullable: false),
+                    PermisosId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_GrupoPermiso", x => new { x.GruposId, x.PermisosId });
+                    table.ForeignKey(
+                        name: "FK_GrupoPermiso_Grupos_GruposId",
+                        column: x => x.GruposId,
+                        principalTable: "Grupos",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_GrupoPermiso_Permisos_PermisosId",
+                        column: x => x.PermisosId,
+                        principalTable: "Permisos",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -327,22 +365,27 @@ namespace hogar_petfecto_api.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Grupos",
+                name: "GrupoUsuario",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    GrupoNombre = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    UsuarioId = table.Column<int>(type: "int", nullable: true)
+                    GruposId = table.Column<int>(type: "int", nullable: false),
+                    UsuariosId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Grupos", x => x.Id);
+                    table.PrimaryKey("PK_GrupoUsuario", x => new { x.GruposId, x.UsuariosId });
                     table.ForeignKey(
-                        name: "FK_Grupos_Usuarios_UsuarioId",
-                        column: x => x.UsuarioId,
+                        name: "FK_GrupoUsuario_Grupos_GruposId",
+                        column: x => x.GruposId,
+                        principalTable: "Grupos",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_GrupoUsuario_Usuarios_UsuariosId",
+                        column: x => x.UsuariosId,
                         principalTable: "Usuarios",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -445,9 +488,14 @@ namespace hogar_petfecto_api.Migrations
                 column: "MascotaId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Grupos_UsuarioId",
-                table: "Grupos",
-                column: "UsuarioId");
+                name: "IX_GrupoPermiso_PermisosId",
+                table: "GrupoPermiso",
+                column: "PermisosId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_GrupoUsuario_UsuariosId",
+                table: "GrupoUsuario",
+                column: "UsuariosId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_LineasPedido_PedidoId",
@@ -548,7 +596,10 @@ namespace hogar_petfecto_api.Migrations
                 name: "Adopciones");
 
             migrationBuilder.DropTable(
-                name: "Grupos");
+                name: "GrupoPermiso");
+
+            migrationBuilder.DropTable(
+                name: "GrupoUsuario");
 
             migrationBuilder.DropTable(
                 name: "LineasPedido");
@@ -557,13 +608,16 @@ namespace hogar_petfecto_api.Migrations
                 name: "OcCounts");
 
             migrationBuilder.DropTable(
-                name: "Permisos");
-
-            migrationBuilder.DropTable(
                 name: "Postulaciones");
 
             migrationBuilder.DropTable(
                 name: "Suscripciones");
+
+            migrationBuilder.DropTable(
+                name: "Permisos");
+
+            migrationBuilder.DropTable(
+                name: "Grupos");
 
             migrationBuilder.DropTable(
                 name: "Usuarios");

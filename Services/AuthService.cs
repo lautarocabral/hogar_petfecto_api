@@ -70,7 +70,7 @@ namespace hogar_petfecto_api.Services
                 return ApiResponse<Usuario>.Error("Ya existe un usuario registrado con este Dni.");
             }
 
-            var grupo = await _context.Grupos.FirstOrDefaultAsync(g => g.Id == 2);
+            var grupo = await _context.Grupos.FirstOrDefaultAsync(g => g.Id == 2); // el usuario se registra con id 2 que corresponde a Invitado
             if (grupo == null)
             {
                 throw new KeyNotFoundException("Grupo no encontrado.");
@@ -80,7 +80,7 @@ namespace hogar_petfecto_api.Services
 
             var nuevaLocalidad = await _context.Localidades.FirstOrDefaultAsync(l => l.Id == signUpDtoRequest.LocalidadId);
 
-            var nuevoUsuario = new Usuario(signUpDtoRequest.Email, HashPassword(signUpDtoRequest.Password) , grupos, new Persona(signUpDtoRequest.Dni, signUpDtoRequest.RazonSocial, nuevaLocalidad, signUpDtoRequest.Direccion, signUpDtoRequest.Telefono, signUpDtoRequest.FechaNacimiento, new List<Perfil>()));
+            var nuevoUsuario = new Usuario(signUpDtoRequest.Email, HashPassword(signUpDtoRequest.Password), grupos, new Persona(signUpDtoRequest.Dni, signUpDtoRequest.RazonSocial, nuevaLocalidad, signUpDtoRequest.Direccion, signUpDtoRequest.Telefono, signUpDtoRequest.FechaNacimiento, new List<Perfil>()));
 
             _context.Usuarios.Add(nuevoUsuario);
 
@@ -98,14 +98,15 @@ namespace hogar_petfecto_api.Services
         {
             // Busca el usuario en la base de datos por email
             var usuarioExistente = await _context.Usuarios
-                                                .Include(grup => grup.Grupos)
-                                                .ThenInclude(permis => permis.Permisos)
-                                              .Include(p => p.Persona)
-                                              .ThenInclude(perf=> perf.Perfiles)
-                                              .Include(p => p.Persona)
-                                              .ThenInclude(loc => loc.Localidad)
-                                              .ThenInclude(prov => prov.Provincia)
-                                              .FirstOrDefaultAsync(u => u.Email == email);
+    .Include(u => u.Persona)
+        .ThenInclude(p => p.Localidad)
+            .ThenInclude(l => l.Provincia)
+    .Include(u => u.Persona)
+        .ThenInclude(p => p.Perfiles)
+            .ThenInclude(perfil => perfil.TipoPerfil) 
+    .Include(u => u.Grupos)
+        .ThenInclude(g => g.Permisos)
+    .FirstOrDefaultAsync(u => u.Email == email);
 
 
             // Si el usuario no existe o la contraseña es incorrecta, retorna null

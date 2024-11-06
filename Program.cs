@@ -1,6 +1,7 @@
 using alumnos_api.Models;
 using alumnos_api.Services;
 using alumnos_api.Services.Interface;
+using hogar_petfecto_api.Models.Mapper;
 using hogar_petfecto_api.Services;
 using hogar_petfecto_api.Services.Interface;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -14,6 +15,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddAutoMapper(typeof(MappingProfile));
 
 // CORS policy name
 var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
@@ -56,6 +58,7 @@ builder.Services.AddDbContext<GestionDbContext>(options =>
     var config = builder.Configuration.GetConnectionString("DefaultConnection");
     options.UseSqlServer(config);
 });
+
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IPerfilManagerService, PerfilManagerService>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();

@@ -3,6 +3,6 @@
     public class PerfilDto
     {
         public int Id { get; set; }
-        public TipoPerfilDto TipoPerfilDto { get; set; }
+        public TipoPerfilDto TipoPerfil { get; set; }
     }
 }

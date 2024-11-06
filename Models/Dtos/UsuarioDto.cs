@@ -4,7 +4,7 @@
     {
         public string Email { get; set; }
         public string PersonaDni { get; set; }
-        public PersonaDto PersonaDto { get; set; }
-        public GrupoDto GrupoDto { get; set; }
+        public PersonaDto Persona { get; set; }
+        public List<GrupoDto> Grupos { get; set; }
     }
 }

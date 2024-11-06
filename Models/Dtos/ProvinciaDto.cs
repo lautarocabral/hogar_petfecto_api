@@ -3,8 +3,6 @@
     public class ProvinciaDto
     {
         public int Id { get; set; }
-        public string Provincia { get; set; }
-
-        public LocalidadDto LocalidadDto { get; set; }
+        public string ProvinciaNombre { get; set; }
     }
 }
