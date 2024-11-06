@@ -275,3 +275,4 @@ C:\Users\lautaro\Documents\Repos\hogar_petfecto_api\obj\Debug\net8.0\refint\hoga
 C:\Users\lautaro\Documents\Repos\hogar_petfecto_api\obj\Debug\net8.0\hogar_petfecto_api.pdb
 C:\Users\lautaro\Documents\Repos\hogar_petfecto_api\obj\Debug\net8.0\hogar_petfecto_api.genruntimeconfig.cache
 C:\Users\lautaro\Documents\Repos\hogar_petfecto_api\obj\Debug\net8.0\ref\hogar_petfecto_api.dll
+C:\Users\lautaro\Documents\Repos\hogar_petfecto_api\bin\Debug\net8.0\BCrypt.Net-Next.dll

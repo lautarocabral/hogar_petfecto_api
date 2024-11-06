@@ -2,23 +2,19 @@
 {
     public class Permiso
     {
+        public Permiso()
+        {
+
+        }
+        public Permiso(string descripcion)
+        {
+            this.Descripcion = descripcion;
+        }
         public int Id { get; private set; }
-        public string PermisoNombre { get; private set; }
+        public string Descripcion { get; private set; }
+        public string NombrePermiso { get; set; }
+        public List<Grupo> Grupos { get; private set; }
 
-        public Permiso(int id, string permisoNombre)
-        {
-            Id = id;
-            PermisoNombre = permisoNombre;
-        }
-
-
-        public void CambiarNombre(string nuevoNombre)
-        {
-            if (!string.IsNullOrEmpty(nuevoNombre))
-            {
-                PermisoNombre = nuevoNombre;
-            }
-        }
     }
 
 }

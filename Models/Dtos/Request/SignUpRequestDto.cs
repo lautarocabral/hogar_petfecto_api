@@ -1,6 +1,6 @@
 ﻿namespace hogar_petfecto_api.Models.Dtos.Request
 {
-    public class SignUpDtoRequest
+    public class SignUpRequestDto
     {
         public string Dni { get; set; }
         public string RazonSocial { get; set; }

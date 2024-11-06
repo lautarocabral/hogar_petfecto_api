@@ -6,8 +6,8 @@ namespace hogar_petfecto_api.Services.Interface
     public interface IAuthService
     {
         string GenerarToken(Usuario usuario);
-        Task<bool> ValidarCredencialesAsync(string email, string contraseña);
+        Task<Usuario?> ValidarCredencialesAsync(string email, string contraseña);
         Task<ApiResponse<Usuario>> Login(Usuario usuario);
-        Task<ApiResponse<Usuario>> SignUp(SignUpDtoRequest signUpDtoRequest);
+        Task<ApiResponse<Usuario>> SignUp(SignUpRequestDto signUpDtoRequest);
     }
 }

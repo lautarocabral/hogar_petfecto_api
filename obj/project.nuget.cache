@@ -1,11 +1,12 @@
 {
   "version": 2,
-  "dgSpecHash": "cDGy1nkEoRxsz0C1iBd+2OslGxUANUtQDENJxaU21UaKfr+h7KPpxW/waBFGGd7ugrlSwnANJsW0gjpdicGfUA==",
+  "dgSpecHash": "zVL4ei+6fRrK3HOEgwOf0tix4XFVrP/RAPwL0086asA58qcdvEYfEX/GSw++GdFuMgRNZcqqqd3efkrZzPOwRQ==",
   "success": true,
   "projectFilePath": "C:\\Users\\lautaro\\Documents\\Repos\\hogar_petfecto_api\\hogar_petfecto_api.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\lautaro\\.nuget\\packages\\azure.core\\1.35.0\\azure.core.1.35.0.nupkg.sha512",
     "C:\\Users\\lautaro\\.nuget\\packages\\azure.identity\\1.10.3\\azure.identity.1.10.3.nupkg.sha512",
+    "C:\\Users\\lautaro\\.nuget\\packages\\bcrypt.net-next\\4.0.3\\bcrypt.net-next.4.0.3.nupkg.sha512",
     "C:\\Users\\lautaro\\.nuget\\packages\\humanizer.core\\2.14.1\\humanizer.core.2.14.1.nupkg.sha512",
     "C:\\Users\\lautaro\\.nuget\\packages\\microsoft.aspnetcore.authentication.jwtbearer\\8.0.10\\microsoft.aspnetcore.authentication.jwtbearer.8.0.10.nupkg.sha512",
     "C:\\Users\\lautaro\\.nuget\\packages\\microsoft.bcl.asyncinterfaces\\6.0.0\\microsoft.bcl.asyncinterfaces.6.0.0.nupkg.sha512",

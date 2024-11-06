@@ -2,14 +2,25 @@
 {
     public class Grupo
     {
-        public Grupo(int id, string grupoNombre)
+
+        public Grupo()
         {
-            Id = id;
-            GrupoNombre = grupoNombre;
+
         }
 
+        public Grupo(string descripcion)
+        {
+            this.Descripcion = descripcion;
+        }
+
+        public void UpdatePermisos(List<Permiso> permisos)
+        {
+            Permisos = permisos;
+        }
         public int Id { get; private set; }
-        public string GrupoNombre { get; private set; }
+        public string Descripcion { get; private set; }
+        public virtual ICollection<Usuario> Usuarios { get; set; }
+        public virtual List<Permiso> Permisos { get; set; }
     }
 
 }

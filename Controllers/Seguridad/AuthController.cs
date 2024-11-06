@@ -12,38 +12,38 @@ namespace hogar_petfecto_api.Controllers.Seguridad
     [ApiController]
     public class AuthController : ControllerBase
     {
-        private readonly IAuthService _authService;
+        //private readonly IAuthService _authService;
         private readonly IUnitOfWork _unitOfWork;
 
-        public AuthController(IAuthService authService, IUnitOfWork unitOfWork)
+        public AuthController(IUnitOfWork unitOfWork)
         {
-            _authService = authService;
+            //_authService = authService;
             _unitOfWork = unitOfWork;
         }
 
-        //[HttpPost("login")]
-        //public async Task<IActionResult> Login([FromBody] LoginRequest request)
-        //{
-        //    var isValid = await _authService.ValidarCredencialesAsync(request.Email, request.Password);
-        //    if (!isValid)
-        //    {
-        //        return Unauthorized(new { message = "Credenciales inválidas" });
-        //    }
+        [HttpPost("login")]
+        public async Task<IActionResult> Login([FromBody] LoginRequestDto request)
+        {
+            var usuario = await _unitOfWork.AuthService.ValidarCredencialesAsync(request.Email, request.Password);
+            if (usuario == null)
+            {
+                return Unauthorized(new { message = "Credenciales inválidas" });
+            }
 
-        //    var usuario = await _unitOfWork.AuthService.Login();
-        //    if (usuario == null)
-        //    {
-        //        return Unauthorized(new { message = "Usuario no encontrado" });
-        //    }
+            //var usuario = await _unitOfWork.AuthService.Login();
+            //if (usuario == null)
+            //{
+            //    return Unauthorized(new { message = "Usuario no encontrado" });
+            //}
 
-        //    var token = _authService.GenerarToken(usuario);
+            var token = _unitOfWork.AuthService.GenerarToken(usuario);
 
-        //    return Ok(new { token });
-        //}
+            return Ok(new { token });
+        }
 
 
         [HttpPost("signup")]
-        public async Task<IActionResult> SignUp([FromBody] SignUpDtoRequest signUpDtoRequest)
+        public async Task<IActionResult> SignUp([FromBody] SignUpRequestDto signUpDtoRequest)
         {
             var newUserResponse = await _unitOfWork.AuthService.SignUp(signUpDtoRequest);
 
@@ -52,7 +52,7 @@ namespace hogar_petfecto_api.Controllers.Seguridad
                 return BadRequest(new { message = newUserResponse.Message });
             }
 
-            var token = _authService.GenerarToken(newUserResponse.Result);
+            var token = _unitOfWork.AuthService.GenerarToken(newUserResponse.Result);
 
             return Ok(new { token });
         }

@@ -59,7 +59,7 @@ namespace hogar_petfecto_api.Services
 
             throw new NotImplementedException();
         }
-        public async Task<ApiResponse<Usuario>> SignUp(SignUpDtoRequest signUpDtoRequest)
+        public async Task<ApiResponse<Usuario>> SignUp(SignUpRequestDto signUpDtoRequest)
         {
             // 1. Verificar si ya existe un usuario con el mismo Dni
             var usuarioExistente = await _context.Usuarios
@@ -80,7 +80,7 @@ namespace hogar_petfecto_api.Services
 
             var nuevaLocalidad = await _context.Localidades.FirstOrDefaultAsync(l => l.Id == signUpDtoRequest.LocalidadId);
 
-            var nuevoUsuario = new Usuario(signUpDtoRequest.Email, signUpDtoRequest.Password, grupos, new Persona(signUpDtoRequest.Dni, signUpDtoRequest.RazonSocial, nuevaLocalidad, signUpDtoRequest.Direccion, signUpDtoRequest.Telefono, signUpDtoRequest.FechaNacimiento, new List<Perfil>()));
+            var nuevoUsuario = new Usuario(signUpDtoRequest.Email, HashPassword(signUpDtoRequest.Password) , grupos, new Persona(signUpDtoRequest.Dni, signUpDtoRequest.RazonSocial, nuevaLocalidad, signUpDtoRequest.Direccion, signUpDtoRequest.Telefono, signUpDtoRequest.FechaNacimiento, new List<Perfil>()));
 
             _context.Usuarios.Add(nuevoUsuario);
 
@@ -94,10 +94,39 @@ namespace hogar_petfecto_api.Services
 
 
 
-        public async Task<bool> ValidarCredencialesAsync(string email, string contraseña)
+        public async Task<Usuario?> ValidarCredencialesAsync(string email, string contraseña)
         {
-            // Aquí implementas la lógica para validar las credenciales contra la base de datos
-            return true; // Reemplaza con la validación real
+            // Busca el usuario en la base de datos por email
+            var usuarioExistente = await _context.Usuarios
+                                                .Include(grup => grup.Grupos)
+                                                .ThenInclude(permis => permis.Permisos)
+                                              .Include(p => p.Persona)
+                                              .ThenInclude(perf=> perf.Perfiles)
+                                              .Include(p => p.Persona)
+                                              .ThenInclude(loc => loc.Localidad)
+                                              .ThenInclude(prov => prov.Provincia)
+                                              .FirstOrDefaultAsync(u => u.Email == email);
+
+
+            // Si el usuario no existe o la contraseña es incorrecta, retorna null
+            if (usuarioExistente == null || !VerifyPassword(contraseña, usuarioExistente.Contraseña))
+            {
+                return null;
+            }
+
+            // Si las credenciales son válidas, retorna el objeto Usuario
+            return usuarioExistente;
+        }
+
+
+        public string HashPassword(string password)
+        {
+            return BCrypt.Net.BCrypt.HashPassword(password);
+        }
+
+        public bool VerifyPassword(string password, string hashedPassword)
+        {
+            return BCrypt.Net.BCrypt.Verify(password, hashedPassword);
         }
     }
 }
