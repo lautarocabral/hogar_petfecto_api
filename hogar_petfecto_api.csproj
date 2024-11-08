@@ -27,4 +27,12 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <EditorConfigFiles Remove="C:\Users\lautaro\Documents\Repos\hogar_petfecto_api\.editorconfig" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="C:\Users\lautaro\Documents\Repos\hogar_petfecto_api\.editorconfig" />
+  </ItemGroup>
+
 </Project>

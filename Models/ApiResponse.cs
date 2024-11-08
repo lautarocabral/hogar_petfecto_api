@@ -24,5 +24,9 @@
         {
             return new ApiResponse<T>(statusCode, message, default);
         }
+        public static ApiResponse<T> UnAuthorizedToken(string message, int statusCode = 400)
+        {
+            return new ApiResponse<T>(statusCode, message, default);
+        }
     }
 }

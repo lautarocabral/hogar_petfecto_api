@@ -59,6 +59,7 @@ builder.Services.AddDbContext<GestionDbContext>(options =>
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IPerfilManagerService, PerfilManagerService>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+builder.Services.AddScoped<IProvinciaService, ProvinciaService>();
 
 var app = builder.Build();
 

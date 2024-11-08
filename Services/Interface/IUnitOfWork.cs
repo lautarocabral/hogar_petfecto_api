@@ -6,6 +6,7 @@ namespace alumnos_api.Services.Interface
     {
         IPerfilManagerService PerfilManagerService { get; }
         IAuthService AuthService { get; }
+        IProvinciaService ProvinciaService { get; }
         Task<int> CompleteAsync();
     }
 }

@@ -1,6 +1,8 @@
 ﻿using alumnos_api.Models;
 using hogar_petfecto_api.Models;
+using hogar_petfecto_api.Models.Dtos;
 using hogar_petfecto_api.Models.Perfiles;
+using hogar_petfecto_api.Models.Seguridad;
 using hogar_petfecto_api.Services.Interface;
 using Microsoft.EntityFrameworkCore;
 
@@ -14,183 +16,200 @@ namespace hogar_petfecto_api.Services
         {
             _context = context;
         }
-        public async Task<ApiResponse<Adoptante>> CargarAdoptante(Adoptante adoptante)
+        public async Task<Usuario?> CargarAdoptante(AdoptanteDto adoptanteDto, int userId)
         {
-            if (adoptante == null)
-            {
-                return ApiResponse<Adoptante>.Error("El objeto Adoptante no puede ser null.");
-            }
-
-            if (adoptante.FechaNacimiento == default(DateTime) || string.IsNullOrEmpty(adoptante.Ocupacion))
-            {
-                return ApiResponse<Adoptante>.Error("Los campos Fecha de Nacimiento y Ocupación son obligatorios.");
-            }
-
-            var existingAdoptante = await _context.Adoptantes
-                .FirstOrDefaultAsync(a => a.FechaNacimiento == adoptante.FechaNacimiento && a.Ocupacion == adoptante.Ocupacion);
-
-            if (existingAdoptante != null)
-            {
-                return ApiResponse<Adoptante>.Error("Ya existe un adoptante con los mismos datos.");
-            }
 
             try
             {
                 TipoPerfil tipoPerfilAdoptante = await _context.TiposPerfil.FirstOrDefaultAsync(p => p.Descripcion == "Adoptante");
 
-                if (tipoPerfilAdoptante == null)
+
+                Adoptante newAdoptante = new Adoptante(tipoPerfilAdoptante, adoptanteDto.EstadoCivil, adoptanteDto.Ocupacion,
+                    adoptanteDto.ExperienciaMascotas, adoptanteDto.NroMascotas);
+
+                var grupo = await _context.Grupos.Include(g => g.Permisos).FirstOrDefaultAsync(g => g.Id == 3); // el usuario se registra con id 2 que corresponde a ADOPTANTE
+                if (grupo == null)
                 {
-                    return ApiResponse<Adoptante>.Error("No se encontró el tipo de perfil 'Adoptante' en la base de datos.");
+                    throw new KeyNotFoundException("Grupo no encontrado.");
                 }
 
-                Adoptante newAdoptante = new Adoptante(tipoPerfilAdoptante, adoptante.FechaNacimiento, adoptante.EstadoCivil, adoptante.Ocupacion,
-                    adoptante.ExperienciaMascotas, adoptante.NroMascotas);
+                List<Grupo> grupos = new List<Grupo> { grupo };
 
-                _context.Adoptantes.Add(newAdoptante);
+                var usuarioExistente = await _context.Usuarios
+                                            .Include(u => u.Persona)
+                                                .ThenInclude(p => p.Localidad)
+                                                    .ThenInclude(l => l.Provincia)
+                                            .Include(u => u.Persona)
+                                                .ThenInclude(p => p.Perfiles)
+                                                    .ThenInclude(perfil => perfil.TipoPerfil)
+                                            .Include(u => u.Grupos)
+                                                .ThenInclude(g => g.Permisos)
+                                            .FirstOrDefaultAsync(u => u.Id == userId); // seteo el perfil al usuario que se cargo como adoptante
+
+                usuarioExistente.Persona.Perfiles.Add(newAdoptante);
+
+
+                usuarioExistente.Grupos.Add(grupo);
+
+
+                if (usuarioExistente.Persona.Perfiles.Count == 4)
+                {
+                    usuarioExistente.Grupos.RemoveAll(g => g.Id == 2); // le quito el rol invitado si ya tiene los 4 perfiles cargados
+                }
                 await _context.SaveChangesAsync();
 
-                return ApiResponse<Adoptante>.Success(newAdoptante, "Adoptante cargado exitosamente.");
+                return usuarioExistente;
             }
             catch (Exception ex)
             {
-                return ApiResponse<Adoptante>.Error($"Ocurrió un error al cargar el adoptante: {ex.Message}");
+                return null;
             }
         }
 
-
-
-
-        public async Task<ApiResponse<Cliente>> CargarCliente(Cliente cliente)
+        public async Task<Usuario?> CargarCliente(ClienteDto clienteDto, int userId)
         {
-            if (cliente == null)
-            {
-                return ApiResponse<Cliente>.Error("El objeto Cliente no puede ser null.");
-            }
-
-            if (string.IsNullOrEmpty(cliente.Cuil) || string.IsNullOrEmpty(cliente.Ocupacion))
-            {
-                return ApiResponse<Cliente>.Error("Los campos CUIL y Ocupación son obligatorios.");
-            }
-
-            // Validación: Verifica si ya existe un Cliente con el mismo CUIL
-            var existingCliente = await _context.Clientes
-                .FirstOrDefaultAsync(c => c.Cuil == cliente.Cuil);
-
-            if (existingCliente != null)
-            {
-                return ApiResponse<Cliente>.Error("Ya existe un cliente con el mismo CUIL.");
-            }
-
             try
             {
-                // Busca el tipo de perfil 'Cliente'
                 TipoPerfil tipoPerfilCliente = await _context.TiposPerfil.FirstOrDefaultAsync(p => p.Descripcion == "Cliente");
 
-                if (tipoPerfilCliente == null)
+                Cliente newCliente = new Cliente(tipoPerfilCliente, clienteDto.Cuil, clienteDto.Ocupacion);
+
+                var grupo = await _context.Grupos.Include(g => g.Permisos).FirstOrDefaultAsync(g => g.Id == 4); // el usuario se registra con id 2 que corresponde a CLIENTE
+                if (grupo == null)
                 {
-                    return ApiResponse<Cliente>.Error("No se encontró el tipo de perfil 'Cliente' en la base de datos.");
+                    throw new KeyNotFoundException("Grupo no encontrado.");
                 }
+                List<Grupo> grupos = new List<Grupo> { grupo };
 
-                // Crea un nuevo objeto Cliente con el perfil adecuado
-                Cliente newCliente = new Cliente(tipoPerfilCliente, cliente.Cuil, cliente.Ocupacion);
+                var usuarioExistente = await _context.Usuarios
+                                            .Include(u => u.Persona)
+                                                .ThenInclude(p => p.Localidad)
+                                                    .ThenInclude(l => l.Provincia)
+                                            .Include(u => u.Persona)
+                                                .ThenInclude(p => p.Perfiles)
+                                                    .ThenInclude(perfil => perfil.TipoPerfil)
+                                            .Include(u => u.Grupos)
+                                                .ThenInclude(g => g.Permisos)
+                                            .FirstOrDefaultAsync(u => u.Id == userId); // seteo el perfil al usuario que se cargo como CLIENTE
 
-                _context.Clientes.Add(newCliente);
+                usuarioExistente.Persona.Perfiles.Add(newCliente);
+
+
+                usuarioExistente.Grupos.Add(grupo);
+
+
+                if (usuarioExistente.Persona.Perfiles.Count == 4)
+                {
+                    usuarioExistente.Grupos.RemoveAll(g => g.Id == 2); // le quito el rol invitado si ya tiene los 4 perfiles cargados
+                }
                 await _context.SaveChangesAsync();
 
-                // Retorna el cliente recién creado
-                return ApiResponse<Cliente>.Success(newCliente, "Cliente cargado exitosamente.");
+                return usuarioExistente;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return ApiResponse<Cliente>.Error($"Ocurrió un error al cargar el cliente: {ex.Message}");
+
+                throw;
             }
         }
 
-
-
-
-        public async Task<ApiResponse<Protectora>> CargarProtectora(Protectora protectora)
+        public async Task<Usuario?> CargarProtectora(ProtectoraDto protectoraDto, int userId)
         {
-            if (protectora == null)
-            {
-                return ApiResponse<Protectora>.Error("El objeto Protectora no puede ser null.");
-            }
-
-            if (protectora.Capacidad <= 0 || protectora.NroVoluntarios < 0)
-            {
-                return ApiResponse<Protectora>.Error("Los campos Capacidad y Número de Voluntarios son obligatorios y deben ser válidos.");
-            }
-
-            // Validación: Verifica si ya existe una protectora con el mismo Id (o cualquier otra clave única que utilices)
-            var existingProtectora = await _context.Protectoras
-                .FirstOrDefaultAsync(p => p.Id == protectora.Id);
-
-            if (existingProtectora != null)
-            {
-                return ApiResponse<Protectora>.Error("Ya existe una protectora con el mismo ID.");
-            }
-
             try
             {
-                // Busca el tipo de perfil 'Protectora'
                 TipoPerfil tipoPerfilProtectora = await _context.TiposPerfil.FirstOrDefaultAsync(p => p.Descripcion == "Protectora");
 
-                if (tipoPerfilProtectora == null)
+                Protectora newProtectora = new Protectora(tipoPerfilProtectora, protectoraDto.Capacidad, protectoraDto.NroVoluntarios, new List<Pedido>(), new List<Producto>(), new List<Mascota>(), protectoraDto.CantidadInicialMascotas);
+
+                var grupo = await _context.Grupos.Include(g => g.Permisos).FirstOrDefaultAsync(g => g.Id == 6); // el usuario se registra con id 2 que corresponde a Protectora
+                if (grupo == null)
                 {
-                    return ApiResponse<Protectora>.Error("No se encontró el tipo de perfil 'Protectora' en la base de datos.");
+                    throw new KeyNotFoundException("Grupo no encontrado.");
                 }
+                List<Grupo> grupos = new List<Grupo> { grupo };
 
-                // Crea una nueva protectora
-                Protectora newProtectora = new Protectora(tipoPerfilProtectora, protectora.Capacidad, protectora.NroVoluntarios, protectora.Pedidos, protectora.Productos, protectora.Mascotas);
+                var usuarioExistente = await _context.Usuarios
+                                            .Include(u => u.Persona)
+                                                .ThenInclude(p => p.Localidad)
+                                                    .ThenInclude(l => l.Provincia)
+                                            .Include(u => u.Persona)
+                                                .ThenInclude(p => p.Perfiles)
+                                                    .ThenInclude(perfil => perfil.TipoPerfil)
+                                            .Include(u => u.Grupos)
+                                                .ThenInclude(g => g.Permisos)
+                                            .FirstOrDefaultAsync(u => u.Id == userId); // seteo el perfil al usuario que se cargo como Protectora
 
-                _context.Protectoras.Add(newProtectora);
+                usuarioExistente.Persona.Perfiles.Add(newProtectora);
+
+
+                usuarioExistente.Grupos.Add(grupo);
+
+
+                if (usuarioExistente.Persona.Perfiles.Count == 4)
+                {
+                    usuarioExistente.Grupos.RemoveAll(g => g.Id == 2); // le quito el rol invitado si ya tiene los 4 perfiles cargados
+                }
                 await _context.SaveChangesAsync();
 
-                // Retorna la protectora recién creada
-                return ApiResponse<Protectora>.Success(newProtectora, "Protectora cargada exitosamente.");
+                return usuarioExistente;
+
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return ApiResponse<Protectora>.Error($"Ocurrió un error al cargar la protectora: {ex.Message}");
+
+                throw;
             }
         }
 
-
-
-        public async Task<ApiResponse<Veterinaria>> CargarVeterinaria(Veterinaria veterinaria)
+        public async Task<Usuario?> CargarVeterinaria(VeterinariaDto veterinariaDto, int userId)
         {
-            if (veterinaria == null || string.IsNullOrEmpty(veterinaria.DireccionLocal))
-            {
-                return ApiResponse<Veterinaria>.Error("El objeto Veterinaria y la dirección no pueden ser null.");
-            }
-
-            // Obtener la latitud y longitud usando el servicio de geocodificación
             try
             {
-               
-
-                // Buscar el tipo de perfil 'Veterinaria'
                 TipoPerfil tipoPerfilVeterinaria = await _context.TiposPerfil.FirstOrDefaultAsync(p => p.Descripcion == "Veterinaria");
 
-                if (tipoPerfilVeterinaria == null)
+                List<Suscripcion> suscripciones = new List<Suscripcion>();
+                suscripciones.Add(new Suscripcion(veterinariaDto.Suscripciones[0].FechaInicio, veterinariaDto.Suscripciones[0].FechaFin, veterinariaDto.Suscripciones[0].Monto, true));
+
+                Veterinaria newVeterinaria = new Veterinaria(tipoPerfilVeterinaria, veterinariaDto.Latitud, veterinariaDto.Longitud, suscripciones
+                    , veterinariaDto.DireccionLocal);
+
+                var grupo = await _context.Grupos.Include(g => g.Permisos).FirstOrDefaultAsync(g => g.Id == 5); // el usuario se registra con id 2 que corresponde a Veterinaria
+                if (grupo == null)
                 {
-                    return ApiResponse<Veterinaria>.Error("No se encontró el tipo de perfil 'Veterinaria'.");
+                    throw new KeyNotFoundException("Grupo no encontrado.");
                 }
+                List<Grupo> grupos = new List<Grupo> { grupo };
 
-                // Crear una nueva veterinaria con latitud y longitud obtenidas
-                Veterinaria newVeterinaria = new Veterinaria(tipoPerfilVeterinaria, veterinaria.Latitud, veterinaria.Longitud, veterinaria.Suscripciones, veterinaria.DireccionLocal);
+                var usuarioExistente = await _context.Usuarios
+                                            .Include(u => u.Persona)
+                                                .ThenInclude(p => p.Localidad)
+                                                    .ThenInclude(l => l.Provincia)
+                                            .Include(u => u.Persona)
+                                                .ThenInclude(p => p.Perfiles)
+                                                    .ThenInclude(perfil => perfil.TipoPerfil)
+                                            .Include(u => u.Grupos)
+                                                .ThenInclude(g => g.Permisos)
+                                            .FirstOrDefaultAsync(u => u.Id == userId); // seteo el perfil al usuario que se cargo como Veterinaria
 
-                _context.Veterinarias.Add(newVeterinaria);
+                usuarioExistente.Persona.Perfiles.Add(newVeterinaria);
+
+
+                usuarioExistente.Grupos.Add(grupo);
+
+
+                if (usuarioExistente.Persona.Perfiles.Count == 4)
+                {
+                    usuarioExistente.Grupos.RemoveAll(g => g.Id == 2); // le quito el rol invitado si ya tiene los 4 perfiles cargados
+                }
                 await _context.SaveChangesAsync();
 
-                return ApiResponse<Veterinaria>.Success(newVeterinaria, "Veterinaria cargada exitosamente.");
+                return usuarioExistente;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return ApiResponse<Veterinaria>.Error($"Ocurrió un error al cargar la veterinaria: {ex.Message}");
+
+                throw;
             }
         }
-
-
     }
 }

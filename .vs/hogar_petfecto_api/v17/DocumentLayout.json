@@ -3,8 +3,24 @@
   "WorkspaceRootPath": "C:\\Users\\lautaro\\Documents\\Repos\\hogar_petfecto_api\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{BD318B38-C782-41E9-A3FB-22DBC46F3CDE}|hogar_petfecto_api.csproj|c:\\users\\lautaro\\documents\\repos\\hogar_petfecto_api\\services\\interface\\iauthservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BD318B38-C782-41E9-A3FB-22DBC46F3CDE}|hogar_petfecto_api.csproj|solutionrelative:services\\interface\\iauthservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BD318B38-C782-41E9-A3FB-22DBC46F3CDE}|hogar_petfecto_api.csproj|c:\\users\\lautaro\\documents\\repos\\hogar_petfecto_api\\services\\authservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BD318B38-C782-41E9-A3FB-22DBC46F3CDE}|hogar_petfecto_api.csproj|solutionrelative:services\\authservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BD318B38-C782-41E9-A3FB-22DBC46F3CDE}|hogar_petfecto_api.csproj|c:\\users\\lautaro\\documents\\repos\\hogar_petfecto_api\\controllers\\mascotascontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BD318B38-C782-41E9-A3FB-22DBC46F3CDE}|hogar_petfecto_api.csproj|solutionrelative:controllers\\mascotascontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{BD318B38-C782-41E9-A3FB-22DBC46F3CDE}|hogar_petfecto_api.csproj|c:\\users\\lautaro\\documents\\repos\\hogar_petfecto_api\\controllers\\seguridad\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{BD318B38-C782-41E9-A3FB-22DBC46F3CDE}|hogar_petfecto_api.csproj|solutionrelative:controllers\\seguridad\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BD318B38-C782-41E9-A3FB-22DBC46F3CDE}|hogar_petfecto_api.csproj|c:\\users\\lautaro\\documents\\repos\\hogar_petfecto_api\\models\\apiresponse.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BD318B38-C782-41E9-A3FB-22DBC46F3CDE}|hogar_petfecto_api.csproj|solutionrelative:models\\apiresponse.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -17,20 +33,72 @@
           "SelectedChildIndex": 1,
           "Children": [
             {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "AuthService.cs",
+              "DocumentMoniker": "C:\\Users\\lautaro\\Documents\\Repos\\hogar_petfecto_api\\Services\\AuthService.cs",
+              "RelativeDocumentMoniker": "Services\\AuthService.cs",
+              "ToolTip": "C:\\Users\\lautaro\\Documents\\Repos\\hogar_petfecto_api\\Services\\AuthService.cs",
+              "RelativeToolTip": "Services\\AuthService.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAA4AAAAmAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-08T23:50:18.346Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "IAuthService.cs",
+              "DocumentMoniker": "C:\\Users\\lautaro\\Documents\\Repos\\hogar_petfecto_api\\Services\\Interface\\IAuthService.cs",
+              "RelativeDocumentMoniker": "Services\\Interface\\IAuthService.cs",
+              "ToolTip": "C:\\Users\\lautaro\\Documents\\Repos\\hogar_petfecto_api\\Services\\Interface\\IAuthService.cs",
+              "RelativeToolTip": "Services\\Interface\\IAuthService.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAqwA8AAAAtAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-08T23:50:02.768Z",
+              "EditorCaption": ""
+            },
+            {
               "$type": "Bookmark",
               "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 2,
+              "Title": "MascotasController.cs",
+              "DocumentMoniker": "C:\\Users\\lautaro\\Documents\\Repos\\hogar_petfecto_api\\Controllers\\MascotasController.cs",
+              "RelativeDocumentMoniker": "Controllers\\MascotasController.cs",
+              "ToolTip": "C:\\Users\\lautaro\\Documents\\Repos\\hogar_petfecto_api\\Controllers\\MascotasController.cs",
+              "RelativeToolTip": "Controllers\\MascotasController.cs",
+              "ViewState": "AQIAAD0AAAAAAAAAAAAuwE4AAAA5AAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-08T23:19:22.601Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "ApiResponse.cs",
+              "DocumentMoniker": "C:\\Users\\lautaro\\Documents\\Repos\\hogar_petfecto_api\\Models\\ApiResponse.cs",
+              "RelativeDocumentMoniker": "Models\\ApiResponse.cs",
+              "ToolTip": "C:\\Users\\lautaro\\Documents\\Repos\\hogar_petfecto_api\\Models\\ApiResponse.cs",
+              "RelativeToolTip": "Models\\ApiResponse.cs",
+              "ViewState": "AQIAAAYAAAAAAAAAAAA3wB0AAAAJAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-08T22:38:02.01Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
               "Title": "AuthController.cs",
               "DocumentMoniker": "C:\\Users\\lautaro\\Documents\\Repos\\hogar_petfecto_api\\Controllers\\Seguridad\\AuthController.cs",
               "RelativeDocumentMoniker": "Controllers\\Seguridad\\AuthController.cs",
               "ToolTip": "C:\\Users\\lautaro\\Documents\\Repos\\hogar_petfecto_api\\Controllers\\Seguridad\\AuthController.cs",
               "RelativeToolTip": "Controllers\\Seguridad\\AuthController.cs",
-              "ViewState": "AQIAACcAAAAAAAAAAAAowDoAAABGAAAA",
+              "ViewState": "AQIAABQAAAAAAAAAAAAQwCsAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-11-06T20:36:02.976Z",
+              "WhenOpened": "2024-11-08T19:15:19.948Z",
               "EditorCaption": ""
             }
           ]

@@ -14,6 +14,7 @@ namespace alumnos_api.Services
         public IPerfilManagerService PerfilManagerService { get; private set; }
 
         public IAuthService AuthService { get; private set; }
+        public IProvinciaService ProvinciaService { get; private set; }
 
         public UnitOfWork(GestionDbContext context, IConfiguration configuration)
         {
@@ -22,6 +23,7 @@ namespace alumnos_api.Services
 
             PerfilManagerService = new PerfilManagerService(_context);
             AuthService = new AuthService(_configuration, _context);
+            ProvinciaService = new ProvinciaService(_configuration, _context);
         }
 
         public async Task<int> CompleteAsync()

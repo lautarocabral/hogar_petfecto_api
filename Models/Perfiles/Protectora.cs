@@ -3,7 +3,7 @@
     public class Protectora : Perfil
     {
         private Protectora() : base(default) { }
-        public Protectora(TipoPerfil tipoPerfil, int capacidad, int nroVoluntarios, List<Pedido> pedidos, List<Producto> productos, List<Mascota> mascotas)
+        public Protectora(TipoPerfil tipoPerfil, int capacidad, int nroVoluntarios, List<Pedido> pedidos, List<Producto> productos, List<Mascota> mascotas, int cantidadInicialMascotas)
             : base(tipoPerfil) // Llama al constructor de Perfil
         {
             Capacidad = capacidad;
@@ -11,6 +11,7 @@
             Pedidos = pedidos ?? new List<Pedido>();
             Productos = productos ?? new List<Producto>();
             Mascotas = mascotas ?? new List<Mascota>();
+            CantidadInicialMascotas = cantidadInicialMascotas;
         }
 
         public int Capacidad { get; private set; }

@@ -1,5 +1,6 @@
 ﻿using alumnos_api.Services.Interface;
 using AutoMapper;
+using Azure;
 using hogar_petfecto_api.Models;
 using hogar_petfecto_api.Models.Dtos;
 using hogar_petfecto_api.Models.Dtos.Request;
@@ -32,7 +33,8 @@ namespace hogar_petfecto_api.Controllers.Seguridad
             var usuario = await _unitOfWork.AuthService.ValidarCredencialesAsync(request.Email, request.Password);
             if (usuario == null)
             {
-                return Unauthorized(ApiResponse<string>.Error("Credenciales inválidas", 401));
+                //return Unauthorized(ApiResponse<string>.Error("Credenciales inválidas", 401));
+                return Ok(ApiResponse<LoginResponseDto>.UnAuthorizedToken("Credenciales inválidas"));
             }
 
             var token = _unitOfWork.AuthService.GenerarToken(usuario);
@@ -60,14 +62,15 @@ namespace hogar_petfecto_api.Controllers.Seguridad
 
             if (newUserResponse.StatusCode < 200 || newUserResponse.StatusCode >= 300)
             {
-                return BadRequest(new { message = newUserResponse.Message });
+                //return BadRequest(new { message =  });
+                return Ok(ApiResponse<String>.Error(newUserResponse.Message));
             }
 
             var token = _unitOfWork.AuthService.GenerarToken(newUserResponse.Result);
 
-            return Ok(new { token });
+            //return Ok(new { token });
+            return Ok(ApiResponse<String>.Success("Usuario registrado con exito"));
         }
-
 
 
 

@@ -10,9 +10,8 @@
         public bool Estado { get; private set; }
 
         // Constructor para inicializar una nueva suscripción
-        public Suscripcion(int id, DateTime fechaInicio, DateTime fechaFin, double monto, bool estado)
+        public Suscripcion( DateTime fechaInicio, DateTime fechaFin, double monto, bool estado)
         {
-            Id = id;
             FechaInicio = fechaInicio;
             FechaFin = fechaFin;
             Monto = monto;

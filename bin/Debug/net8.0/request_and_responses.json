@@ -1,0 +1,63 @@
+// signUp
+{
+    "dni": "34585885",
+    "razonSocial": "Juan Perez",
+    "localidadId": 1,
+    "direccion": "Calle Falsa 123",
+    "telefono": "+54 9 11 1234 5678",
+    "fechaNacimiento": "1990-05-15T00:00:00",
+    "email": "admin@gmail.com",
+    "password": "admin"
+}
+// login
+{
+    "email": "admin@gmail.com",
+    "password": "admin"
+}
+// response de login
+{
+    "statusCode": 200,
+    "message": "Operación exitosa",
+    "result": {
+        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJsYXV0YXJvLmNhYnJhbEBnbWFpbC5jb20iLCJ1c2VySWQiOiIxIiwianRpIjoiNjMzNmRkN2UtZjM2NS00OTc0LWJmNjgtYjM0MmUyNmI3ODczIiwiZXhwIjo0ODg2NTk2NDAyLCJpc3MiOiJUdUlzc3VlciIsImF1ZCI6IlR1QXVkaWVuY2UifQ.55QmVy9Y97vnnSUdYbZLckynImae7i64NVm7Tt7MyfU",
+        "usuarioResponseDto": {
+            "email": "lautaro.cabral@gmail.com",
+            "personaDni": "34585885",
+            "persona": {
+                "razonSocial": "Juan Perez",
+                "direccion": "Calle Falsa 123",
+                "telefono": "+54 9 11 1234 5678",
+                "fechaNacimiento": "1990-05-15T00:00:00",
+                "localidad": {
+                    "id": 1,
+                    "localidadNombre": "La Plata",
+                    "provincia": {
+                        "id": 1,
+                        "provinciaNombre": "Buenos Aires"
+                    }
+                },
+                "perfiles": [
+                    {
+                        "id": 1,
+                        "tipoPerfil"{
+                            "id": 1,
+                            "descripcion": "Cliente"
+                        }
+                    }
+                ]
+            },
+            "grupos": [
+                {
+                    "id": 2,
+                    "descripcion": "Invitado",
+                    "permisos": [
+                        {
+                            "id": 1,
+                            "nombrePermiso": "Cliente"
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+}
