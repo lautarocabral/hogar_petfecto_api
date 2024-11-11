@@ -3,8 +3,16 @@
     public class Protectora : Perfil
     {
         private Protectora() : base(default) { }
-        public Protectora(TipoPerfil tipoPerfil, int capacidad, int nroVoluntarios, List<Pedido> pedidos, List<Producto> productos, List<Mascota> mascotas, int cantidadInicialMascotas)
-            : base(tipoPerfil) // Llama al constructor de Perfil
+
+        public Protectora(
+            TipoPerfil tipoPerfil,
+            int capacidad,
+            int nroVoluntarios,
+            List<Pedido> pedidos,
+            List<Producto> productos,
+            List<Mascota> mascotas,
+            int cantidadInicialMascotas)
+            : base(tipoPerfil)
         {
             Capacidad = capacidad;
             NroVoluntarios = nroVoluntarios;
@@ -20,5 +28,15 @@
         public List<Producto> Productos { get; private set; }
         public List<Mascota> Mascotas { get; private set; }
         public int CantidadInicialMascotas { get; private set; }
+
+        // Method to add a new Mascota to the list
+        public void AddMascota(Mascota mascota)
+        {
+            if (Mascotas == null)
+            {
+                Mascotas = new List<Mascota>();
+            }
+            Mascotas.Add(mascota);
+        }
     }
 }

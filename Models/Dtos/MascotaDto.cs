@@ -2,12 +2,12 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-namespace hogar_petfecto_api.Models.Dtos.Request
+namespace hogar_petfecto_api.Models.Dtos
 {
-    public class MascotaRequestDto
+    public class MascotaDto
     {
-
-        public int TipoMascota { get; set; }
+        public int Id { get; set; }
+        public TipoMascotaDto TipoMascota { get; set; }
         public string Nombre { get; set; }
         public double Peso { get; set; }
         public bool AptoDepto { get; set; }

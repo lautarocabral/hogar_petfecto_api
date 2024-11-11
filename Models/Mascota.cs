@@ -16,7 +16,8 @@
             bool castrado,
             string sexo,
             bool vacunado,
-            bool adoptado)
+            bool adoptado,
+            string imagen)
         {
             TipoMascota = tipoMascota;
             Nombre = nombre;
@@ -28,6 +29,7 @@
             Sexo = sexo;
             Vacunado = vacunado;
             Adoptado = adoptado;
+            Imagen = imagen;
         }
 
         public int Id { get; private set; }
@@ -41,6 +43,31 @@
         public string Sexo { get; private set; }
         public bool Vacunado { get; private set; }
         public bool Adoptado { get; private set; }
-    }
+        public string Imagen { get; private set; }
 
+
+        public void Update(
+      TipoMascota tipoMascota,
+      string nombre,
+      double peso,
+      bool aptoDepto,
+      bool aptoPerros,
+      DateTime fechaNacimiento,
+      bool castrado,
+      string sexo,
+      bool vacunado,
+      string imagen)
+        {
+            TipoMascota = tipoMascota;
+            Nombre = nombre;
+            Peso = peso;
+            AptoDepto = aptoDepto;
+            AptoPerros = aptoPerros;
+            FechaNacimiento = fechaNacimiento;
+            Castrado = castrado;
+            Sexo = sexo;
+            Vacunado = vacunado;
+            Imagen = imagen;
+        }
+    }
 }

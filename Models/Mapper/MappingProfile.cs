@@ -25,6 +25,9 @@ namespace hogar_petfecto_api.Models.Mapper
 
             CreateMap<TipoPerfil, TipoPerfilDto>();
 
+            CreateMap<Mascota, MascotaDto>();
+            CreateMap<TipoMascota, TipoMascotaDto>();
+
         }
     }
 

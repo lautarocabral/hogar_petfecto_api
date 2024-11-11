@@ -2,13 +2,11 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-using hogar_petfecto_api.Models.Perfiles;
-
 namespace hogar_petfecto_api.Models.Dtos.Response
 {
-    public class MascotasResponseDto
+    public class TipoMascotaResponseDto
     {
         public string token { get; set; }
-        public List<MascotaDto> MascotasDto { get; set; }
+        public List<TipoMascota> TiposMascotas { get; set; }
     }
 }
