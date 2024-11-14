@@ -87,3 +87,8 @@ INSERT INTO dbo.TiposMascota(Tipo )
 VALUES
 ('Perro'), --1
 ('Gato'); --2
+
+INSERT INTO dbo.EstadosPostulacion(Estado )
+VALUES
+('Adoptado'), --1
+('No adoptado'); --2
