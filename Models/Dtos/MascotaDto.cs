@@ -18,5 +18,6 @@ namespace hogar_petfecto_api.Models.Dtos
         public bool Vacunado { get; set; }
         public bool Adoptado { get; set; }
         public string Imagen { get; set; }
+        public string Descripcion { get; set; }
     }
 }

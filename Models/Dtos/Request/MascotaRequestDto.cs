@@ -15,6 +15,7 @@ namespace hogar_petfecto_api.Models.Dtos.Request
         public DateTime FechaNacimiento { get; set; }
         public bool Castrado { get; set; }
         public string Sexo { get; set; }
+        public string Descripcion { get; set; }
         public bool Vacunado { get; set; }
         public bool Adoptado { get; set; }
         public string Imagen { get; set; }

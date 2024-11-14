@@ -52,6 +52,7 @@ namespace alumnos_api.Models
         public DbSet<Cliente> Clientes { get; set; }
         public DbSet<Protectora> Protectoras { get; set; }
         public DbSet<Veterinaria> Veterinarias { get; set; }
+        public DbSet<Oferta> Ofertas { get; set; }
         public DbSet<Grupo> Grupos { get; set; }
         public DbSet<Permiso> Permisos { get; set; }
         public DbSet<Usuario> Usuarios { get; set; }

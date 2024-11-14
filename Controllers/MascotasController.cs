@@ -126,6 +126,7 @@ namespace hogar_petfecto_api.Controllers
                               mascota.FechaNacimiento,
                               mascota.Castrado,
                               mascota.Sexo,
+                              mascota.Descripcion,
                               mascota.Vacunado,
                               false,
                               mascota.Imagen));
@@ -313,6 +314,7 @@ namespace hogar_petfecto_api.Controllers
                       mascota.FechaNacimiento,
                       mascota.Castrado,
                       mascota.Sexo,
+                      mascota.Descripcion,
                       mascota.Vacunado,
                       mascota.Imagen);
 
@@ -330,6 +332,44 @@ namespace hogar_petfecto_api.Controllers
             };
 
             return Ok(ApiResponse<LoginResponseDto>.Success(response));
+        }
+
+        [HttpGet("GetAllMascotas")]
+        public async Task<IActionResult> GetAllMascotas()
+        {
+
+            // AUTH/////////////////////////////////////////////////////////////////////////////////
+            var claimsPrincipal = _unitOfWork.AuthService.GetClaimsPrincipalFromToken(HttpContext);
+            if (claimsPrincipal == null)
+            {
+                return Unauthorized(ApiResponse<string>.Error("Token inválido", 401));
+            }
+            var userId = claimsPrincipal.FindFirst("userId")?.Value;
+            var usuario = await _unitOfWork.AuthService.ReturnUsuario(userId);
+            var token = _unitOfWork.AuthService.GenerarToken(usuario);
+            ////////////VALIDA PERMISO DE USUARIO//////////////////////////////////////////////////////////
+            bool hasPermiso = usuario.Grupos.Any(grupo => grupo.Permisos.Any(p => p.Id == 1));
+
+            if (!hasPermiso)
+            {
+                return Unauthorized(ApiResponse<string>.Error("No tiene permisos para obtener las mascotas", 401));
+            }
+            ////////////VALIDA PERMISO DE USUARIO//////////////////////////////////////////////////////////
+            //AUTH/////////////////////////////////////////////////////////////////////////////////
+
+            var mascotas = await _context.Mascotas.Include(t=> t.TipoMascota).ToListAsync();
+
+            var mascotaDto = _mapper.Map<List<MascotaDto>>(mascotas);
+
+            var response = new MascotasResponseDto
+            {
+                token = token,
+                MascotasDto = mascotaDto
+            };
+
+
+
+            return Ok(ApiResponse<MascotasResponseDto>.Success(response));
         }
 
     }

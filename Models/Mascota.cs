@@ -15,6 +15,7 @@
             DateTime fechaNacimiento,
             bool castrado,
             string sexo,
+            string descripcion,
             bool vacunado,
             bool adoptado,
             string imagen)
@@ -30,6 +31,7 @@
             Vacunado = vacunado;
             Adoptado = adoptado;
             Imagen = imagen;
+            Descripcion = descripcion;
         }
 
         public int Id { get; private set; }
@@ -44,6 +46,8 @@
         public bool Vacunado { get; private set; }
         public bool Adoptado { get; private set; }
         public string Imagen { get; private set; }
+        public string Descripcion { get; private set; }
+
 
 
         public void Update(
@@ -55,6 +59,7 @@
       DateTime fechaNacimiento,
       bool castrado,
       string sexo,
+      string descripcion,
       bool vacunado,
       string imagen)
         {
@@ -68,6 +73,7 @@
             Sexo = sexo;
             Vacunado = vacunado;
             Imagen = imagen;
+            Descripcion = descripcion;
         }
     }
 }

@@ -171,7 +171,7 @@ namespace hogar_petfecto_api.Services
                 suscripciones.Add(new Suscripcion(veterinariaDto.Suscripciones[0].FechaInicio, veterinariaDto.Suscripciones[0].FechaFin, veterinariaDto.Suscripciones[0].Monto, true));
 
                 Veterinaria newVeterinaria = new Veterinaria(tipoPerfilVeterinaria, veterinariaDto.Latitud, veterinariaDto.Longitud, suscripciones
-                    , veterinariaDto.DireccionLocal);
+                    , veterinariaDto.DireccionLocal, new List<Oferta>());
 
                 var grupo = await _context.Grupos.Include(g => g.Permisos).FirstOrDefaultAsync(g => g.Id == 5); // el usuario se registra con id 2 que corresponde a Veterinaria
                 if (grupo == null)

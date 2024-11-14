@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using hogar_petfecto_api.Models.Dtos;
+using hogar_petfecto_api.Models.Perfiles;
 using hogar_petfecto_api.Models.Seguridad;
 
 namespace hogar_petfecto_api.Models.Mapper
@@ -26,9 +27,16 @@ namespace hogar_petfecto_api.Models.Mapper
             CreateMap<TipoPerfil, TipoPerfilDto>();
 
             CreateMap<Mascota, MascotaDto>();
+
             CreateMap<TipoMascota, TipoMascotaDto>();
+
+            CreateMap<Postulacion, PostulacionDto>();
+
+            CreateMap<Adoptante, AdoptanteDto>();
+
+            CreateMap<EstadoPostulacion, EstadoPostulacion>();
+
 
         }
     }
-
 }

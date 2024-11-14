@@ -81,3 +81,9 @@ VALUES
 (2, 6), -- Invitado --> Modulo SignUp Cliente
 (2, 7), -- Invitado --> Modulo SignUp Veterinaria
 (2, 8); -- Invitado --> Modulo SignUp Protectora
+
+
+INSERT INTO dbo.TiposMascota(Tipo )
+VALUES
+('Perro'), --1
+('Gato'); --2
