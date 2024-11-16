@@ -1,4 +1,6 @@
-﻿namespace hogar_petfecto_api.Models
+﻿using hogar_petfecto_api.Models.Perfiles;
+
+namespace hogar_petfecto_api.Models
 {
     public class Mascota
     {
@@ -18,7 +20,8 @@
             string descripcion,
             bool vacunado,
             bool adoptado,
-            string imagen)
+            string imagen,
+            int protectoraId)
         {
             TipoMascota = tipoMascota;
             Nombre = nombre;
@@ -32,9 +35,12 @@
             Adoptado = adoptado;
             Imagen = imagen;
             Descripcion = descripcion;
+            ProtectoraId = protectoraId;
+            TipoMascotaId = tipoMascota.Id;
         }
 
         public int Id { get; private set; }
+        public int TipoMascotaId { get; private set; }
         public TipoMascota TipoMascota { get; private set; }
         public string Nombre { get; private set; }
         public double Peso { get; private set; }
@@ -47,6 +53,7 @@
         public bool Adoptado { get; private set; }
         public string Imagen { get; private set; }
         public string Descripcion { get; private set; }
+        public int ProtectoraId { get; private set; }
 
 
 
@@ -74,6 +81,14 @@
             Vacunado = vacunado;
             Imagen = imagen;
             Descripcion = descripcion;
+        }
+
+        public void UpdateEstado(
+                bool adoptado
+                )
+        {
+
+            Adoptado = adoptado;
         }
     }
 }

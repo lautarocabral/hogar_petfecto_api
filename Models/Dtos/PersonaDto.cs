@@ -8,5 +8,8 @@
         public DateTime FechaNacimiento { get; set; }
         public LocalidadDto Localidad { get; set; }
         public List<PerfilDto> Perfiles { get;  set; }
+
+        public string Dni { get; set; }
+
     }
 }

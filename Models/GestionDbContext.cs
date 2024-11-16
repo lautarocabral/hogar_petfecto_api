@@ -45,6 +45,13 @@ namespace alumnos_api.Models
                 .HasForeignKey<Usuario>(u => u.PersonaDni) // Configura PersonaDni como clave foránea
                 .IsRequired();
 
+            modelBuilder.Entity<Mascota>()
+                .HasOne<Protectora>() // Relación hacia Protectora
+                .WithMany()           // No necesitas la colección explícita
+                .HasForeignKey(m => m.ProtectoraId)
+                .OnDelete(DeleteBehavior.Restrict); // Cambiar a Restrict
+
+
             base.OnModelCreating(modelBuilder);
         }
 

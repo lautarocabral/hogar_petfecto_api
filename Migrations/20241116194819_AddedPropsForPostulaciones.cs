@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace hogar_petfecto_api.Migrations
 {
     /// <inheritdoc />
-    public partial class FinalMigration : Migration
+    public partial class AddedPropsForPostulaciones : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -191,7 +191,6 @@ namespace hogar_petfecto_api.Migrations
                     TipoPerfilId = table.Column<int>(type: "int", nullable: false),
                     PerfilTipo = table.Column<string>(type: "nvarchar(13)", maxLength: 13, nullable: false),
                     PersonaDni = table.Column<string>(type: "nvarchar(450)", nullable: true),
-                    FechaNacimiento = table.Column<DateTime>(type: "datetime2", nullable: true),
                     EstadoCivil = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Ocupacion = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ExperienciaMascotas = table.Column<bool>(type: "bit", nullable: true),
@@ -258,7 +257,10 @@ namespace hogar_petfecto_api.Migrations
                     Sexo = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Vacunado = table.Column<bool>(type: "bit", nullable: false),
                     Adoptado = table.Column<bool>(type: "bit", nullable: false),
-                    ProtectoraId = table.Column<int>(type: "int", nullable: true)
+                    Imagen = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Descripcion = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ProtectoraId = table.Column<int>(type: "int", nullable: false),
+                    ProtectoraId1 = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -267,6 +269,12 @@ namespace hogar_petfecto_api.Migrations
                         name: "FK_Mascotas_Perfil_ProtectoraId",
                         column: x => x.ProtectoraId,
                         principalTable: "Perfil",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Mascotas_Perfil_ProtectoraId1",
+                        column: x => x.ProtectoraId1,
+                        principalTable: "Perfil",
                         principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Mascotas_TiposMascota_TipoMascotaId",
@@ -274,6 +282,32 @@ namespace hogar_petfecto_api.Migrations
                         principalTable: "TiposMascota",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Ofertas",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Producto = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Imagen = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Titulo = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Descripcion = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Descuento = table.Column<double>(type: "float", nullable: false),
+                    FechaInicio = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    FechaFin = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Activo = table.Column<bool>(type: "bit", nullable: false),
+                    VeterinariaId = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Ofertas", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Ofertas_Perfil_VeterinariaId",
+                        column: x => x.VeterinariaId,
+                        principalTable: "Perfil",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -518,9 +552,19 @@ namespace hogar_petfecto_api.Migrations
                 column: "ProtectoraId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Mascotas_ProtectoraId1",
+                table: "Mascotas",
+                column: "ProtectoraId1");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Mascotas_TipoMascotaId",
                 table: "Mascotas",
                 column: "TipoMascotaId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Ofertas_VeterinariaId",
+                table: "Ofertas",
+                column: "VeterinariaId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Pedidos_ClienteId",
@@ -606,6 +650,9 @@ namespace hogar_petfecto_api.Migrations
 
             migrationBuilder.DropTable(
                 name: "OcCounts");
+
+            migrationBuilder.DropTable(
+                name: "Ofertas");
 
             migrationBuilder.DropTable(
                 name: "Postulaciones");

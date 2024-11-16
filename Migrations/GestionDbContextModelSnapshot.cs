@@ -233,7 +233,10 @@ namespace hogar_petfecto_api.Migrations
                     b.Property<double>("Peso")
                         .HasColumnType("float");
 
-                    b.Property<int?>("ProtectoraId")
+                    b.Property<int>("ProtectoraId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("ProtectoraId1")
                         .HasColumnType("int");
 
                     b.Property<string>("Sexo")
@@ -249,6 +252,8 @@ namespace hogar_petfecto_api.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("ProtectoraId");
+
+                    b.HasIndex("ProtectoraId1");
 
                     b.HasIndex("TipoMascotaId");
 
@@ -772,8 +777,14 @@ namespace hogar_petfecto_api.Migrations
             modelBuilder.Entity("hogar_petfecto_api.Models.Mascota", b =>
                 {
                     b.HasOne("hogar_petfecto_api.Models.Perfiles.Protectora", null)
+                        .WithMany()
+                        .HasForeignKey("ProtectoraId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("hogar_petfecto_api.Models.Perfiles.Protectora", null)
                         .WithMany("Mascotas")
-                        .HasForeignKey("ProtectoraId");
+                        .HasForeignKey("ProtectoraId1");
 
                     b.HasOne("hogar_petfecto_api.Models.TipoMascota", "TipoMascota")
                         .WithMany()

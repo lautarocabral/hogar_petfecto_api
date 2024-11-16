@@ -129,7 +129,8 @@ namespace hogar_petfecto_api.Controllers
                               mascota.Descripcion,
                               mascota.Vacunado,
                               false,
-                              mascota.Imagen));
+                              mascota.Imagen, protectoraProfile.Id
+                              ));
 
             await _context.SaveChangesAsync();
 
@@ -357,7 +358,7 @@ namespace hogar_petfecto_api.Controllers
             ////////////VALIDA PERMISO DE USUARIO//////////////////////////////////////////////////////////
             //AUTH/////////////////////////////////////////////////////////////////////////////////
 
-            var mascotas = await _context.Mascotas.Include(t=> t.TipoMascota).ToListAsync();
+            var mascotas = await _context.Mascotas.Include(t => t.TipoMascota).ToListAsync();
 
             var mascotaDto = _mapper.Map<List<MascotaDto>>(mascotas);
 

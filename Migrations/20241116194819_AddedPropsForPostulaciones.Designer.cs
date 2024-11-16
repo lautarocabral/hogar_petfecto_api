@@ -12,8 +12,8 @@ using alumnos_api.Models;
 namespace hogar_petfecto_api.Migrations
 {
     [DbContext(typeof(GestionDbContext))]
-    [Migration("20241111180458_ImageColumnProtectora")]
-    partial class ImageColumnProtectora
+    [Migration("20241116194819_AddedPropsForPostulaciones")]
+    partial class AddedPropsForPostulaciones
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -218,6 +218,10 @@ namespace hogar_petfecto_api.Migrations
                     b.Property<bool>("Castrado")
                         .HasColumnType("bit");
 
+                    b.Property<string>("Descripcion")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime>("FechaNacimiento")
                         .HasColumnType("datetime2");
 
@@ -232,7 +236,10 @@ namespace hogar_petfecto_api.Migrations
                     b.Property<double>("Peso")
                         .HasColumnType("float");
 
-                    b.Property<int?>("ProtectoraId")
+                    b.Property<int>("ProtectoraId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("ProtectoraId1")
                         .HasColumnType("int");
 
                     b.Property<string>("Sexo")
@@ -248,6 +255,8 @@ namespace hogar_petfecto_api.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("ProtectoraId");
+
+                    b.HasIndex("ProtectoraId1");
 
                     b.HasIndex("TipoMascotaId");
 
@@ -268,6 +277,52 @@ namespace hogar_petfecto_api.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("OcCounts");
+                });
+
+            modelBuilder.Entity("hogar_petfecto_api.Models.Oferta", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("Activo")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Descripcion")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<double>("Descuento")
+                        .HasColumnType("float");
+
+                    b.Property<DateTime>("FechaFin")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("FechaInicio")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Imagen")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Producto")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Titulo")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("VeterinariaId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("VeterinariaId");
+
+                    b.ToTable("Ofertas");
                 });
 
             modelBuilder.Entity("hogar_petfecto_api.Models.Pedido", b =>
@@ -725,8 +780,14 @@ namespace hogar_petfecto_api.Migrations
             modelBuilder.Entity("hogar_petfecto_api.Models.Mascota", b =>
                 {
                     b.HasOne("hogar_petfecto_api.Models.Perfiles.Protectora", null)
+                        .WithMany()
+                        .HasForeignKey("ProtectoraId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("hogar_petfecto_api.Models.Perfiles.Protectora", null)
                         .WithMany("Mascotas")
-                        .HasForeignKey("ProtectoraId");
+                        .HasForeignKey("ProtectoraId1");
 
                     b.HasOne("hogar_petfecto_api.Models.TipoMascota", "TipoMascota")
                         .WithMany()
@@ -735,6 +796,13 @@ namespace hogar_petfecto_api.Migrations
                         .IsRequired();
 
                     b.Navigation("TipoMascota");
+                });
+
+            modelBuilder.Entity("hogar_petfecto_api.Models.Oferta", b =>
+                {
+                    b.HasOne("hogar_petfecto_api.Models.Perfiles.Veterinaria", null)
+                        .WithMany("Ofertas")
+                        .HasForeignKey("VeterinariaId");
                 });
 
             modelBuilder.Entity("hogar_petfecto_api.Models.Pedido", b =>
@@ -864,6 +932,8 @@ namespace hogar_petfecto_api.Migrations
 
             modelBuilder.Entity("hogar_petfecto_api.Models.Perfiles.Veterinaria", b =>
                 {
+                    b.Navigation("Ofertas");
+
                     b.Navigation("Suscripciones");
                 });
 #pragma warning restore 612, 618
