@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("hogar_petfecto_api")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+3f981bd7d1b6d179bfd251806e87d700fe4629ed")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+29475953e6f06182ad1e3af4b8a9d84e6682ab40")]
 [assembly: System.Reflection.AssemblyProductAttribute("hogar_petfecto_api")]
 [assembly: System.Reflection.AssemblyTitleAttribute("hogar_petfecto_api")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
