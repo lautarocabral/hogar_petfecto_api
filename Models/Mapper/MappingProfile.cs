@@ -36,6 +36,9 @@ namespace hogar_petfecto_api.Models.Mapper
 
             CreateMap<EstadoPostulacion, EstadoPostulacion>();
 
+            CreateMap<Producto, ProductoDto>();
+            CreateMap<Categoria, CategoriaDto>();
+
 
         }
     }

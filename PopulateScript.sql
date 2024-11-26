@@ -92,3 +92,12 @@ INSERT INTO dbo.EstadosPostulacion(Estado )
 VALUES
 ('Adoptado'), --1
 ('No adoptado'); --2
+
+
+INSERT INTO dbo.Categorias(Nombre )
+VALUES
+('Accesorios'), --1
+('Alimentos y Premios'), --2
+('Higiene y Cuidado'), --3
+('Juguetes'), --4
+('Transporte y Descanso'); -- 5
