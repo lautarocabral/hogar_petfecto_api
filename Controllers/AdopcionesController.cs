@@ -361,7 +361,7 @@ namespace hogar_petfecto_api.Controllers
             var mascotaAAdoptar = await _context.Mascotas.FirstOrDefaultAsync(m => m.Id == mascotaId);
 
             // Obtener el adoptante seleccionado
-            var adoptante = _context.Adoptantes.Include(c=>c.TipoPerfil)
+            var adoptante = _context.Adoptantes.Include(c => c.TipoPerfil)
            .FirstOrDefault(i => i.Id == adoptanteId);
 
             // Crear el registro de adopción
@@ -391,7 +391,50 @@ namespace hogar_petfecto_api.Controllers
         }
 
 
+        [HttpGet("GetMisAdopciones")]
+        public async Task<IActionResult> GetMisPostulaciones()
+        {
 
+            // AUTH/////////////////////////////////////////////////////////////////////////////////
+            var claimsPrincipal = _unitOfWork.AuthService.GetClaimsPrincipalFromToken(HttpContext);
+            if (claimsPrincipal == null)
+            {
+                return Unauthorized(ApiResponse<string>.Error("Token inválido", 401));
+            }
+            var userId = claimsPrincipal.FindFirst("userId")?.Value;
+            var usuario = await _unitOfWork.AuthService.ReturnUsuario(userId);
+            var token = _unitOfWork.AuthService.GenerarToken(usuario);
+            ////////////VALIDA PERMISO DE USUARIO//////////////////////////////////////////////////////////
+            bool hasPermiso = usuario.Grupos.Any(grupo =>
+                                        grupo.Permisos.Any(p => p.Id == 1 || p.Id == 4)
+                                    );
+
+            if (!hasPermiso)
+            {
+                return Unauthorized(ApiResponse<string>.Error("No tiene permisos para obtener postulaciones", 401));
+            }
+            ////////////VALIDA PERMISO DE USUARIO//////////////////////////////////////////////////////////
+            //AUTH/////////////////////////////////////////////////////////////////////////////////
+
+
+            var adopcionesDeUsuario = await _context.Adopciones
+                  .Include(mas => mas.Mascota)
+                  .Include(protec => protec.Adoptante)
+                  .Where(adopcion => adopcion.Adoptante.Id == int.Parse(userId))
+                  .ToListAsync();
+
+
+
+            var adopcionesDto = _mapper.Map<List<AdopcionDto>>(adopcionesDeUsuario);
+            var response = new AdopcionesResponseDto
+            {
+                token = token,
+                Adopciones = adopcionesDto
+            };
+
+
+            return Ok(ApiResponse<AdopcionesResponseDto>.Success(response));
+        }
 
 
         private PersonaConAdoptanteDto MapearPersonaConAdoptanteDto(Persona persona)
