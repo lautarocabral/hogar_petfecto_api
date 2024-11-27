@@ -58,9 +58,10 @@ namespace hogar_petfecto_api.Controllers
                 //AUTH/////////////////////////////////////////////////////////////////////////////////
 
                 var usuarioProtectora = await _context.Usuarios
-                    .Include(u => u.Persona)
-                        .ThenInclude(p => p.Perfiles)
-                    .FirstOrDefaultAsync(u => u.Id == int.Parse(userId));
+                         .Include(u => u.Persona)
+                             .ThenInclude(p => p.Perfiles)
+                         .ThenInclude(p => ((Protectora)p).Productos).ThenInclude(t => t.Categoria)
+                         .FirstOrDefaultAsync(u => u.Id == int.Parse(userId));
 
                 if (usuarioProtectora == null)
                 {
@@ -68,7 +69,7 @@ namespace hogar_petfecto_api.Controllers
                 }
 
                 // Filtrar el perfil para obtener el perfil de tipo Protectora
-                var adoptantePerfil = usuario.Persona.Perfiles
+                var adoptantePerfil = usuarioProtectora.Persona.Perfiles
                     .OfType<Protectora>()
                     .FirstOrDefault();
 
@@ -129,10 +130,12 @@ namespace hogar_petfecto_api.Controllers
                 ////////////VALIDA PERMISO DE USUARIO//////////////////////////////////////////////////////////
                 //AUTH/////////////////////////////////////////////////////////////////////////////////
 
+
                 var usuarioProtectora = await _context.Usuarios
-                    .Include(u => u.Persona)
-                        .ThenInclude(p => p.Perfiles)
-                    .FirstOrDefaultAsync(u => u.Id == int.Parse(userId));
+                         .Include(u => u.Persona)
+                             .ThenInclude(p => p.Perfiles)
+                         .ThenInclude(p => ((Protectora)p).Productos).ThenInclude(t => t.Categoria)
+                         .FirstOrDefaultAsync(u => u.Id == int.Parse(userId));
 
                 if (usuarioProtectora == null)
                 {
@@ -140,7 +143,7 @@ namespace hogar_petfecto_api.Controllers
                 }
 
                 // Filtrar el perfil para obtener el perfil de tipo Protectora
-                var adoptantePerfil = usuario.Persona.Perfiles
+                var adoptantePerfil = usuarioProtectora.Persona.Perfiles
                     .OfType<Protectora>()
                     .FirstOrDefault();
 
@@ -288,6 +291,78 @@ namespace hogar_petfecto_api.Controllers
             catch (Exception e)
             {
 
+                return Ok(ApiResponse<Exception>.Error(e.Message));
+            }
+        }
+
+        [HttpGet("EliminarMerchandising/{id}")]
+        public async Task<IActionResult> EliminarMerchandising(int id)
+        {
+
+            try
+            {
+                // AUTH/////////////////////////////////////////////////////////////////////////////////
+                var claimsPrincipal = _unitOfWork.AuthService.GetClaimsPrincipalFromToken(HttpContext);
+                if (claimsPrincipal == null)
+                {
+                    return Unauthorized(ApiResponse<string>.Error("Token inválido", 401));
+                }
+                var userId = claimsPrincipal.FindFirst("userId")?.Value;
+                var usuario = await _unitOfWork.AuthService.ReturnUsuario(userId);
+                var token = _unitOfWork.AuthService.GenerarToken(usuario);
+                ////////////VALIDA PERMISO DE USUARIO//////////////////////////////////////////////////////////
+                bool hasPermiso = usuario.Grupos.Any(grupo => grupo.Permisos.Any(p => p.Id == 4));
+
+                if (!hasPermiso)
+                {
+                    return Unauthorized(ApiResponse<string>.Error("No tiene permisos para eliminar merch", 401));
+                }
+                ////////////VALIDA PERMISO DE USUARIO//////////////////////////////////////////////////////////
+                //AUTH/////////////////////////////////////////////////////////////////////////////////
+
+
+                var usuarioProtectora = await _context.Usuarios
+                         .Include(u => u.Persona)
+                             .ThenInclude(p => p.Perfiles)
+                         .ThenInclude(p => ((Protectora)p).Productos).ThenInclude(t => t.Categoria)
+                         .FirstOrDefaultAsync(u => u.Id == int.Parse(userId));
+
+                if (usuarioProtectora == null)
+                {
+                    throw new Exception("Usuario no encontrado");
+                }
+
+                // Filtrar el perfil para obtener el perfil de tipo Protectora
+                var adoptantePerfil = usuarioProtectora.Persona.Perfiles
+                    .OfType<Protectora>()
+                    .FirstOrDefault();
+
+
+                if (adoptantePerfil == null)
+                {
+                    return Ok(ApiResponse<string>.Error("No existe el adoptante"));
+                }
+
+                var producto = adoptantePerfil.Productos.FirstOrDefault(prod => prod.Id == id);
+
+                if (producto == null) return Ok(ApiResponse<string>.Error("No existe el producto"));
+
+
+                adoptantePerfil.Productos.Remove(producto);
+
+                await _context.SaveChangesAsync();
+
+                var usuarioDto = _mapper.Map<UsuarioDto>(usuario);
+                var response = new LoginResponseDto
+                {
+                    token = token,
+                    UsuarioResponseDto = usuarioDto
+                };
+
+                return Ok(ApiResponse<LoginResponseDto>.Success(response));
+            }
+            catch (Exception e)
+            {
                 return Ok(ApiResponse<Exception>.Error(e.Message));
             }
         }
