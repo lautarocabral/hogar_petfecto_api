@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using alumnos_api.Models;
 
@@ -11,9 +12,11 @@ using alumnos_api.Models;
 namespace hogar_petfecto_api.Migrations
 {
     [DbContext(typeof(GestionDbContext))]
-    partial class GestionDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241130182958_tituloForProduct")]
+    partial class tituloForProduct
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -483,7 +486,7 @@ namespace hogar_petfecto_api.Migrations
                     b.Property<decimal>("Precio")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<int>("ProtectoraId")
+                    b.Property<int?>("ProtectoraId")
                         .HasColumnType("int");
 
                     b.Property<int>("Stock")
@@ -894,15 +897,11 @@ namespace hogar_petfecto_api.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("hogar_petfecto_api.Models.Perfiles.Protectora", "Protectora")
+                    b.HasOne("hogar_petfecto_api.Models.Perfiles.Protectora", null)
                         .WithMany("Productos")
-                        .HasForeignKey("ProtectoraId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ProtectoraId");
 
                     b.Navigation("Categoria");
-
-                    b.Navigation("Protectora");
                 });
 
             modelBuilder.Entity("hogar_petfecto_api.Models.Suscripcion", b =>

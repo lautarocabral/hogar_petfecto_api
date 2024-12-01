@@ -43,6 +43,15 @@ namespace hogar_petfecto_api.Models.Mapper
             CreateMap<Adopcion, AdopcionDto>();
 
 
+            // CreateMap<Producto, ProductoDto>()
+            //.ForMember(dest => dest.Categoria, opt => opt.MapFrom(src => src.Categoria)) // Si es necesario mapear manualmente
+            //.ForMember(dest => dest.Protectora, opt => opt.MapFrom(src => src.Protectora))
+            //.ReverseMap();
+
+
+            CreateMap<Protectora, ProtectoraDto>();
+                //.ReverseMap();
+
         }
     }
 }

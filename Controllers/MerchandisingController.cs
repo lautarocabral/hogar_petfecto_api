@@ -69,12 +69,12 @@ namespace hogar_petfecto_api.Controllers
                 }
 
                 // Filtrar el perfil para obtener el perfil de tipo Protectora
-                var adoptantePerfil = usuarioProtectora.Persona.Perfiles
+                var protectoraPerfil = usuarioProtectora.Persona.Perfiles
                     .OfType<Protectora>()
                     .FirstOrDefault();
 
                 var categoria = await _context.Categorias.FirstOrDefaultAsync(id => id.Id == merchandisingRequestDto.CategoriaId);
-                if (adoptantePerfil == null)
+                if (protectoraPerfil == null)
                 {
                     return Ok(ApiResponse<string>.Error("No existe el adoptante"));
                 }
@@ -84,9 +84,14 @@ namespace hogar_petfecto_api.Controllers
                 }
 
                 var newProducto = new Producto(
-                  merchandisingRequestDto.Descripcion, merchandisingRequestDto.Stock, merchandisingRequestDto.Precio, categoria, merchandisingRequestDto.Imagen);
+                  merchandisingRequestDto.Descripcion,
+                  merchandisingRequestDto.Stock,
+                  merchandisingRequestDto.Precio,
+                  categoria, merchandisingRequestDto.Imagen,
+                  merchandisingRequestDto.Titulo,
+                  protectoraPerfil, protectoraPerfil.Id);
 
-                adoptantePerfil.Productos.Add(newProducto);
+                protectoraPerfil.Productos.Add(newProducto);
 
                 await _context.SaveChangesAsync();
 
@@ -161,7 +166,7 @@ namespace hogar_petfecto_api.Controllers
 
                 var producto = adoptantePerfil.Productos.FirstOrDefault(prod => prod.Id == merchandisingRequestDto.ProductoId);
 
-                producto.Update(merchandisingRequestDto.Descripcion, merchandisingRequestDto.Stock, merchandisingRequestDto.Precio, categoria, merchandisingRequestDto.Imagen);
+                producto.Update(merchandisingRequestDto.Descripcion, merchandisingRequestDto.Stock, merchandisingRequestDto.Precio, categoria, merchandisingRequestDto.Imagen, merchandisingRequestDto.Titulo);
 
                 await _context.SaveChangesAsync();
 
@@ -204,10 +209,11 @@ namespace hogar_petfecto_api.Controllers
                 ////////////VALIDA PERMISO DE USUARIO//////////////////////////////////////////////////////////
                 //AUTH/////////////////////////////////////////////////////////////////////////////////
                 var usuarioProtectora = await _context.Usuarios
-                          .Include(u => u.Persona)
-                              .ThenInclude(p => p.Perfiles)
-                          .ThenInclude(p => ((Protectora)p).Productos).ThenInclude(t => t.Categoria)
-                          .FirstOrDefaultAsync(u => u.Id == int.Parse(userId));
+                      .Include(u => u.Persona)
+                          .ThenInclude(p => p.Perfiles)
+                              .ThenInclude(p => ((Protectora)p).Productos)
+                                  .ThenInclude(pr => pr.Categoria)
+                      .FirstOrDefaultAsync(u => u.Id == int.Parse(userId));
 
                 if (usuarioProtectora == null)
                 {
@@ -363,6 +369,84 @@ namespace hogar_petfecto_api.Controllers
             }
             catch (Exception e)
             {
+                return Ok(ApiResponse<Exception>.Error(e.Message));
+            }
+        }
+
+
+        [HttpGet("GetAllMerchandising")]
+        public async Task<IActionResult> GetAllMerchandising()
+        {
+            try
+            {
+                // AUTH/////////////////////////////////////////////////////////////////////////////////
+                var claimsPrincipal = _unitOfWork.AuthService.GetClaimsPrincipalFromToken(HttpContext);
+                if (claimsPrincipal == null)
+                {
+                    return Unauthorized(ApiResponse<string>.Error("Token inválido", 401));
+                }
+                var userId = claimsPrincipal.FindFirst("userId")?.Value;
+                var usuario = await _unitOfWork.AuthService.ReturnUsuario(userId);
+                var token = _unitOfWork.AuthService.GenerarToken(usuario);
+                ////////////VALIDA PERMISO DE USUARIO//////////////////////////////////////////////////////////
+                bool hasPermiso = usuario.Grupos.Any(grupo => grupo.Permisos.Any(p => p.Id == 2));
+
+                if (!hasPermiso)
+                {
+                    return Unauthorized(ApiResponse<string>.Error("No tiene permisos para editar merch", 401));
+                }
+                ////////////VALIDA PERMISO DE USUARIO//////////////////////////////////////////////////////////
+                //AUTH/////////////////////////////////////////////////////////////////////////////////
+                var productos = await _context.Productos
+                         .Include(p => p.Categoria)
+                         .Include(p => p.Protectora) // Incluye la relación Protectora directamente
+                         .ToListAsync();
+
+                if (productos == null)
+                {
+                    throw new Exception("Productos no encontrados");
+                }
+
+                // Mapea los productos a ProductoDto
+                var productosDtos = _mapper.Map<List<ProductoDto>>(productos);
+
+                // Carga todos los usuarios con sus perfiles en memoria
+                var protectoraUsuarios = await _context.Usuarios
+                    .Include(u => u.Persona)
+                        .ThenInclude(p => p.Perfiles)
+                    .ToListAsync();
+
+                // Popular el campo NombreProtectora manualmente
+                foreach (var productoDto in productosDtos)
+                {
+                    // Obtiene el ProtectoraId del producto
+                    var protectoraId = productos.FirstOrDefault(p => p.Id == productoDto.Id)?.ProtectoraId;
+
+                    if (protectoraId != null)
+                    {
+                        // Busca el usuario que tiene un perfil Protectora con el ID correspondiente
+                        var usuarioProtec = protectoraUsuarios.FirstOrDefault(u =>
+                            u.Persona.Perfiles.OfType<Protectora>().Any(pr => pr.Id == protectoraId));
+
+                        // Asigna el nombre de la protectora al ProductoDto
+                        productoDto.NombreProtectora = usuarioProtec?.Persona.RazonSocial ?? "Nombre no disponible";
+                    }
+                }
+
+                // Construye la respuesta
+                var response = new ProductosResponseDto
+                {
+                    token = token,
+                    Productos = productosDtos
+                };
+
+                return Ok(ApiResponse<ProductosResponseDto>.Success(response));
+
+
+            }
+            catch (Exception e)
+            {
+
                 return Ok(ApiResponse<Exception>.Error(e.Message));
             }
         }

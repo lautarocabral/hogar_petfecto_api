@@ -22,11 +22,11 @@ namespace alumnos_api.Models
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-         modelBuilder.Entity<Pedido>()
-                .HasOne(p => p.Cliente)
-                .WithMany() // No hay una colección en Cliente que apunte a Pedido
-                .HasForeignKey("ClienteId") // Configura la clave foránea
-                .OnDelete(DeleteBehavior.Restrict); // Usar Restrict para evitar problemas de cascada
+            modelBuilder.Entity<Pedido>()
+                   .HasOne(p => p.Cliente)
+                   .WithMany() // No hay una colección en Cliente que apunte a Pedido
+                   .HasForeignKey("ClienteId") // Configura la clave foránea
+                   .OnDelete(DeleteBehavior.Restrict); // Usar Restrict para evitar problemas de cascada
 
             modelBuilder.Entity<Pedido>()
                 .HasOne(p => p.Protectora)
@@ -51,6 +51,10 @@ namespace alumnos_api.Models
                 .HasForeignKey(m => m.ProtectoraId)
                 .OnDelete(DeleteBehavior.Restrict); // Cambiar a Restrict
 
+            modelBuilder.Entity<Producto>()
+               .HasOne(p => p.Protectora)
+               .WithMany(p => p.Productos)
+               .HasForeignKey(p => p.ProtectoraId);
 
             base.OnModelCreating(modelBuilder);
         }

@@ -8,10 +8,15 @@ namespace hogar_petfecto_api.Models.Dtos
     {
         public int Id { get; set; }
         public string Descripcion { get; set; }
+        public string Titulo { get; set; }
         public int Stock { get; set; }
         public decimal Precio { get; set; }
         public CategoriaDto Categoria { get; set; }
         public string Imagen { get; set; }
+        public ProtectoraDto Protectora { get; set; }
+        public int ProtectoraId { get; set; }
+        public string NombreProtectora { get; set; }
+
 
     }
 }
