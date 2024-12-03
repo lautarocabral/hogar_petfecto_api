@@ -305,7 +305,7 @@ namespace hogar_petfecto_api.Controllers
                         .Include(l => l.LineaPedido)
                         .ThenInclude(prod => prod.Producto)
                         .ThenInclude(cat => cat.Categoria)
-                        .FirstOrDefaultAsync(p => p.NroOrdenCompra == nroPedido);
+                        .FirstOrDefaultAsync(p => p.Id == nroPedido);
 
                     if (pedido == null)
                         throw new KeyNotFoundException("Pedido no encontrado.");
@@ -349,9 +349,12 @@ namespace hogar_petfecto_api.Controllers
                     // Agregar la tabla al documento
                     document.Add(table);
 
+                    var totalPlusService = total * 1.15m;
+
+
                     // Agregar total
                     document.Add(Chunk.NEWLINE);
-                    document.Add(new Paragraph($"Total: {total.ToString("C2")}", headingFont));
+                    document.Add(new Paragraph($"Total + Servicio (15%): {totalPlusService.ToString("C2")}", headingFont));
                 }
                 catch (Exception ex)
                 {

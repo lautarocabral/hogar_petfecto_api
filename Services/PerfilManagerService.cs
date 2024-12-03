@@ -167,8 +167,18 @@ namespace hogar_petfecto_api.Services
             {
                 TipoPerfil tipoPerfilVeterinaria = await _context.TiposPerfil.FirstOrDefaultAsync(p => p.Descripcion == "Veterinaria");
 
+                var tipoPlan = TipoPlan.Mensual;
+                var fechaFin = DateTime.Today.AddDays(30);
+
+                if (veterinariaDto.Suscripciones[0].Monto == 200)
+                {
+                    tipoPlan = TipoPlan.Anual;
+                    fechaFin = DateTime.Today.AddYears(1);
+                }
+
+
                 List<Suscripcion> suscripciones = new List<Suscripcion>();
-                suscripciones.Add(new Suscripcion(veterinariaDto.Suscripciones[0].FechaInicio, veterinariaDto.Suscripciones[0].FechaFin, veterinariaDto.Suscripciones[0].Monto, true));
+                suscripciones.Add(new Suscripcion(veterinariaDto.Suscripciones[0].FechaInicio, fechaFin, veterinariaDto.Suscripciones[0].Monto, true, tipoPlan));
 
                 Veterinaria newVeterinaria = new Veterinaria(tipoPerfilVeterinaria, veterinariaDto.Latitud, veterinariaDto.Longitud, suscripciones
                     , veterinariaDto.DireccionLocal, new List<Oferta>());

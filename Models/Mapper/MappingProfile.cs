@@ -53,7 +53,8 @@ namespace hogar_petfecto_api.Models.Mapper
             CreateMap<Pedido, PedidoDto>();
             CreateMap<LineaPedido, LineaPedidoDto>();
             CreateMap<Cliente, ClienteDto>();
-            //.ReverseMap();
+            CreateMap<Suscripcion, SuscripcionDto>();
+
 
         }
     }
