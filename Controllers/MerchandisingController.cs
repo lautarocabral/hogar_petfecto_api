@@ -400,6 +400,7 @@ namespace hogar_petfecto_api.Controllers
                 var productos = await _context.Productos
                          .Include(p => p.Categoria)
                          .Include(p => p.Protectora) // Incluye la relación Protectora directamente
+                         .Where(p => p.Stock > 0)
                          .ToListAsync();
 
                 if (productos == null)

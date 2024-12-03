@@ -18,5 +18,6 @@ namespace hogar_petfecto_api.Models.Dtos.Request
     public class AltaId
     {
         public int Id { get; set; }
+        public int Cantidad { get; set; }
     }
 }

@@ -342,8 +342,9 @@ namespace hogar_petfecto_api.Migrations
                     b.Property<DateTime>("FechaPago")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("IdPago")
-                        .HasColumnType("int");
+                    b.Property<string>("IdPago")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<double>("Monto")
                         .HasColumnType("float");

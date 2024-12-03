@@ -41,6 +41,13 @@ namespace hogar_petfecto_api.Models
             Imagen = imagen;
             Titulo = titulo;
         }
+
+        public void UpdateStock(int stock)
+        {
+
+            Stock = stock;
+
+        }
     }
 
 }

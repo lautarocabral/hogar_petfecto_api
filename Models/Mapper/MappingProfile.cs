@@ -50,7 +50,10 @@ namespace hogar_petfecto_api.Models.Mapper
 
 
             CreateMap<Protectora, ProtectoraDto>();
-                //.ReverseMap();
+            CreateMap<Pedido, PedidoDto>();
+            CreateMap<LineaPedido, LineaPedidoDto>();
+            CreateMap<Cliente, ClienteDto>();
+            //.ReverseMap();
 
         }
     }

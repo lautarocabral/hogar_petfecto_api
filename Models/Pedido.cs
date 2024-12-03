@@ -8,7 +8,7 @@ namespace hogar_petfecto_api.Models
         {
         }
 
-        public Pedido(DateTime fecha, List<LineaPedido> lineaPedido, int nroOrdenCompra, DateTime fechaOrdenCompra, int idPago, DateTime fechaPago, double monto, Cliente cliente, Protectora protectora)
+        public Pedido(DateTime fecha, List<LineaPedido> lineaPedido, int nroOrdenCompra, DateTime fechaOrdenCompra, string idPago, DateTime fechaPago, double monto, Cliente cliente, Protectora protectora)
         {
             Fecha = fecha;
             LineaPedido = lineaPedido ?? new List<LineaPedido>();
@@ -26,7 +26,7 @@ namespace hogar_petfecto_api.Models
         public List<LineaPedido> LineaPedido { get; private set; }
         public int NroOrdenCompra { get; private set; }
         public DateTime FechaOrdenCompra { get; private set; }
-        public int IdPago { get; private set; }
+        public string IdPago { get; private set; }
         public DateTime FechaPago { get; private set; }
         public double Monto { get; private set; }
         public Cliente Cliente { get; private set; }
