@@ -78,8 +78,8 @@ namespace hogar_petfecto_api.Controllers
 
 
                 var suscripcion = veterinariaProfile.Suscripciones
-                                                    .OrderByDescending(s => s.FechaInicio)
-                                                    .FirstOrDefault();
+                                    .OrderByDescending(s => s.Id)
+                                    .FirstOrDefault();
 
                 var suscripcionDto = _mapper.Map<SuscripcionDto>(suscripcion);
 
@@ -101,7 +101,7 @@ namespace hogar_petfecto_api.Controllers
             }
         }
 
-        [HttpPost("CambiarEstadoSuscripcion")]
+        [HttpGet("CambiarEstadoSuscripcion")]
         public async Task<IActionResult> CambiarEstadoSuscripcion([FromBody] SuscripcionRequestDto suscripcionRequestDto)
         {
             try
@@ -125,13 +125,13 @@ namespace hogar_petfecto_api.Controllers
                 ////////////VALIDA PERMISO DE USUARIO//////////////////////////////////////////////////////////
                 //AUTH/////////////////////////////////////////////////////////////////////////////////
                 var usuarioVeterinaria = await _context.Usuarios
-                                        .Include(u => u.Persona)
-                                            .ThenInclude(p => p.Perfiles)
-                                                .ThenInclude(p => (p as Veterinaria).Suscripciones)
-                                        .Include(u => u.Persona)
-                                            .ThenInclude(p => p.Perfiles)
-                                                .ThenInclude(p => (p as Veterinaria).Ofertas)
-                                        .FirstOrDefaultAsync(u => u.Id == int.Parse(userId));
+                                             .Include(u => u.Persona)
+                                                 .ThenInclude(p => p.Perfiles)
+                                                     .ThenInclude(p => (p as Veterinaria).Suscripciones)
+                                             .Include(u => u.Persona)
+                                                 .ThenInclude(p => p.Perfiles)
+                                                     .ThenInclude(p => (p as Veterinaria).Ofertas)
+                                             .FirstOrDefaultAsync(u => u.Id == int.Parse(userId));
 
 
                 if (usuarioVeterinaria == null || usuarioVeterinaria.Persona == null)
@@ -146,8 +146,9 @@ namespace hogar_petfecto_api.Controllers
                 if (veterinariaProfile == null) return Ok(ApiResponse<string>.Error("No existe el perfil veterinaria"));
 
                 var suscripcion = veterinariaProfile.Suscripciones
-                                                    .OrderByDescending(s => s.FechaInicio)
-                                                    .FirstOrDefault();
+                                     .OrderByDescending(s => s.Id)
+                                     .FirstOrDefault();
+
 
 
                 if (suscripcion == null) return Ok(ApiResponse<string>.Error("No existe la suscripcion"));
@@ -155,12 +156,20 @@ namespace hogar_petfecto_api.Controllers
 
                 if (suscripcion.Estado == false && suscripcionRequestDto.estado == true)
                 {
+
+                    var monto = 20;
+                    var nuevaFechaFin = DateTime.Today.AddDays(30);
+                    if (suscripcionRequestDto.tipoPlan == TipoPlan.Anual)
+                    {
+                        monto = 200;
+                        nuevaFechaFin = nuevaFechaFin.AddDays(365);
+                    }
                     // Se activa una nueva suscripcion
                     veterinariaProfile.Suscripciones.Add(
                         new Suscripcion(
                             DateTime.Today,
-                            DateTime.Today.AddDays(30),
-                            suscripcion.Monto,
+                            nuevaFechaFin,
+                            monto,
                             suscripcionRequestDto.estado,
                             suscripcion.TipoPlan
                             )
@@ -169,7 +178,8 @@ namespace hogar_petfecto_api.Controllers
                 }
                 else
                 {
-                    suscripcion.CambiarEstado(suscripcionRequestDto.estado);
+                    // Se cancela suscripcion
+                    suscripcion.CambiarEstado(suscripcionRequestDto.estado, DateTime.Today);
                 }
 
                 await _context.SaveChangesAsync();
@@ -245,21 +255,15 @@ namespace hogar_petfecto_api.Controllers
                 if (suscripcion == null) return Ok(ApiResponse<string>.Error("No existe la suscripcion"));
 
                 var monto = 20;
+                var nuevaFecha = suscripcion.FechaInicio;
                 if (suscripcionRequestDto.tipoPlan == TipoPlan.Anual)
                 {
                     monto = 200;
+                    nuevaFecha = nuevaFecha.AddDays(365);
                 }
 
-                // Se agrega una nueva suscripcion
-                veterinariaProfile.Suscripciones.Add(
-                    new Suscripcion(
-                        DateTime.Today,
-                        DateTime.Today.AddDays(30),
-                        monto,
-                        true,
-                        suscripcionRequestDto.tipoPlan
-                        )
-                    );
+                // Se modifica el plan
+                suscripcion.CambiarPlan(suscripcionRequestDto.tipoPlan, nuevaFecha);
 
 
 

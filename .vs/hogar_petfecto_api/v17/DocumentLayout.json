@@ -3,16 +3,20 @@
   "WorkspaceRootPath": "C:\\Users\\lautaro\\Documents\\Repos\\hogar_petfecto_api\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{BD318B38-C782-41E9-A3FB-22DBC46F3CDE}|hogar_petfecto_api.csproj|c:\\users\\lautaro\\documents\\repos\\hogar_petfecto_api\\controllers\\veterinariascontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{BD318B38-C782-41E9-A3FB-22DBC46F3CDE}|hogar_petfecto_api.csproj|solutionrelative:controllers\\veterinariascontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{BD318B38-C782-41E9-A3FB-22DBC46F3CDE}|hogar_petfecto_api.csproj|c:\\users\\lautaro\\documents\\repos\\hogar_petfecto_api\\controllers\\seguridad\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BD318B38-C782-41E9-A3FB-22DBC46F3CDE}|hogar_petfecto_api.csproj|solutionrelative:controllers\\seguridad\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{BD318B38-C782-41E9-A3FB-22DBC46F3CDE}|hogar_petfecto_api.csproj|c:\\users\\lautaro\\documents\\repos\\hogar_petfecto_api\\controllers\\mascotascontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{BD318B38-C782-41E9-A3FB-22DBC46F3CDE}|hogar_petfecto_api.csproj|solutionrelative:controllers\\mascotascontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{BD318B38-C782-41E9-A3FB-22DBC46F3CDE}|hogar_petfecto_api.csproj|c:\\users\\lautaro\\documents\\repos\\hogar_petfecto_api\\populatescript.sql||{CC5D8DF0-88F4-4BB2-9DBB-B48CEE65C30A}",
+      "RelativeMoniker": "D:0:0:{BD318B38-C782-41E9-A3FB-22DBC46F3CDE}|hogar_petfecto_api.csproj|solutionrelative:populatescript.sql||{CC5D8DF0-88F4-4BB2-9DBB-B48CEE65C30A}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{BD318B38-C782-41E9-A3FB-22DBC46F3CDE}|hogar_petfecto_api.csproj|c:\\users\\lautaro\\documents\\repos\\hogar_petfecto_api\\services\\perfilmanagerservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{BD318B38-C782-41E9-A3FB-22DBC46F3CDE}|hogar_petfecto_api.csproj|solutionrelative:services\\perfilmanagerservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{BD318B38-C782-41E9-A3FB-22DBC46F3CDE}|hogar_petfecto_api.csproj|c:\\users\\lautaro\\documents\\repos\\hogar_petfecto_api\\models\\seguridad\\usuario.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BD318B38-C782-41E9-A3FB-22DBC46F3CDE}|hogar_petfecto_api.csproj|solutionrelative:models\\seguridad\\usuario.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BD318B38-C782-41E9-A3FB-22DBC46F3CDE}|hogar_petfecto_api.csproj|c:\\users\\lautaro\\documents\\repos\\hogar_petfecto_api\\populatescript.sql||{CC5D8DF0-88F4-4BB2-9DBB-B48CEE65C30A}|CodeFrame",
+      "RelativeMoniker": "D:0:0:{BD318B38-C782-41E9-A3FB-22DBC46F3CDE}|hogar_petfecto_api.csproj|solutionrelative:populatescript.sql||{CC5D8DF0-88F4-4BB2-9DBB-B48CEE65C30A}|CodeFrame"
     }
   ],
   "DocumentGroupContainers": [
@@ -31,40 +35,39 @@
             {
               "$type": "Document",
               "DocumentIndex": 1,
-              "Title": "MascotasController.cs",
-              "DocumentMoniker": "C:\\Users\\lautaro\\Documents\\Repos\\hogar_petfecto_api\\Controllers\\MascotasController.cs",
-              "RelativeDocumentMoniker": "Controllers\\MascotasController.cs",
-              "ToolTip": "C:\\Users\\lautaro\\Documents\\Repos\\hogar_petfecto_api\\Controllers\\MascotasController.cs",
-              "RelativeToolTip": "Controllers\\MascotasController.cs",
-              "ViewState": "AQIAAE4AAAAAAAAAAAAowFUAAABAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-12-03T22:55:34.105Z",
+              "Title": "PopulateScript.sql ",
+              "DocumentMoniker": "C:\\Users\\lautaro\\Documents\\Repos\\hogar_petfecto_api\\PopulateScript.sql",
+              "RelativeDocumentMoniker": "PopulateScript.sql",
+              "ToolTip": "C:\\Users\\lautaro\\Documents\\Repos\\hogar_petfecto_api\\PopulateScript.sql",
+              "RelativeToolTip": "PopulateScript.sql",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000826|",
+              "WhenOpened": "2024-12-05T21:05:08.849Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 2,
-              "Title": "PerfilManagerService.cs",
-              "DocumentMoniker": "C:\\Users\\lautaro\\Documents\\Repos\\hogar_petfecto_api\\Services\\PerfilManagerService.cs",
-              "RelativeDocumentMoniker": "Services\\PerfilManagerService.cs",
-              "ToolTip": "C:\\Users\\lautaro\\Documents\\Repos\\hogar_petfecto_api\\Services\\PerfilManagerService.cs",
-              "RelativeToolTip": "Services\\PerfilManagerService.cs",
-              "ViewState": "AQIAALYAAAAAAAAAAAAAAL8AAAAAAAAA",
+              "Title": "Usuario.cs",
+              "DocumentMoniker": "C:\\Users\\lautaro\\Documents\\Repos\\hogar_petfecto_api\\Models\\Seguridad\\Usuario.cs",
+              "RelativeDocumentMoniker": "Models\\Seguridad\\Usuario.cs",
+              "ToolTip": "C:\\Users\\lautaro\\Documents\\Repos\\hogar_petfecto_api\\Models\\Seguridad\\Usuario.cs",
+              "RelativeToolTip": "Models\\Seguridad\\Usuario.cs",
+              "ViewState": "AQIAABMAAAAAAAAAAIA8wCAAAAAbAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-12-03T21:29:41.48Z",
+              "WhenOpened": "2024-12-05T20:51:54.296Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "VeterinariasController.cs",
-              "DocumentMoniker": "C:\\Users\\lautaro\\Documents\\Repos\\hogar_petfecto_api\\Controllers\\VeterinariasController.cs",
-              "RelativeDocumentMoniker": "Controllers\\VeterinariasController.cs",
-              "ToolTip": "C:\\Users\\lautaro\\Documents\\Repos\\hogar_petfecto_api\\Controllers\\VeterinariasController.cs",
-              "RelativeToolTip": "Controllers\\VeterinariasController.cs",
-              "ViewState": "AQIAAPEAAAAAAAAAAAAnwAMBAAAtAAAA",
+              "Title": "AuthController.cs",
+              "DocumentMoniker": "C:\\Users\\lautaro\\Documents\\Repos\\hogar_petfecto_api\\Controllers\\Seguridad\\AuthController.cs",
+              "RelativeDocumentMoniker": "Controllers\\Seguridad\\AuthController.cs",
+              "ToolTip": "C:\\Users\\lautaro\\Documents\\Repos\\hogar_petfecto_api\\Controllers\\Seguridad\\AuthController.cs",
+              "RelativeToolTip": "Controllers\\Seguridad\\AuthController.cs",
+              "ViewState": "AQIAAO0AAAAAAAAAAAAmwPwAAAAgAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-12-03T19:10:19.258Z",
+              "WhenOpened": "2024-12-05T20:04:15.568Z",
               "EditorCaption": ""
             }
           ]

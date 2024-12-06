@@ -6,5 +6,6 @@
         public string PersonaDni { get; set; }
         public PersonaDto Persona { get; set; }
         public List<GrupoDto> Grupos { get; set; }
+        public List<int> HasToUpdateProfile { get;  set; }
     }
 }

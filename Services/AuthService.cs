@@ -83,7 +83,7 @@ namespace hogar_petfecto_api.Services
 
             var nuevaLocalidad = await _context.Localidades.FirstOrDefaultAsync(l => l.Id == signUpDtoRequest.LocalidadId);
 
-            var nuevoUsuario = new Usuario(signUpDtoRequest.Email, HashPassword(signUpDtoRequest.Password), grupos, new Persona(signUpDtoRequest.Dni, signUpDtoRequest.RazonSocial, nuevaLocalidad, signUpDtoRequest.Direccion, signUpDtoRequest.Telefono, signUpDtoRequest.FechaNacimiento, new List<Perfil>()));
+            var nuevoUsuario = new Usuario(signUpDtoRequest.Email, HashPassword(signUpDtoRequest.Password), grupos, new Persona(signUpDtoRequest.Dni, signUpDtoRequest.RazonSocial, nuevaLocalidad, signUpDtoRequest.Direccion, signUpDtoRequest.Telefono, signUpDtoRequest.FechaNacimiento, new List<Perfil>()), new List<int>());
 
             _context.Usuarios.Add(nuevoUsuario);
 

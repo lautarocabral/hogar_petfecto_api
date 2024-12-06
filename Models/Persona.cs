@@ -25,6 +25,11 @@ namespace hogar_petfecto_api.Models
         public DateTime FechaNacimiento { get; private set; }
         public List<Perfil> Perfiles { get; private set; }
         public Usuario Usuario { get; set; }
+
+        public void UpdatePersona(string razonSocial)
+        {
+            RazonSocial = razonSocial;
+        }
     }
 
 }

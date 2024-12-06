@@ -21,13 +21,16 @@
         }
 
         // Método para actualizar el estado de la suscripción
-        public void CambiarEstado(bool nuevoEstado)
+        public void CambiarEstado(bool nuevoEstado, DateTime nuevaFechaFin)
         {
             Estado = nuevoEstado;
+            FechaFin = nuevaFechaFin;
+
         }
-        public void CambiarPlan(TipoPlan nuevoPlan)
+        public void CambiarPlan(TipoPlan nuevoPlan, DateTime nuevaFechaFin)
         {
             TipoPlan = nuevoPlan;
+            FechaFin = nuevaFechaFin;
         }
 
         // Método para extender la fecha de finalización de la suscripción
