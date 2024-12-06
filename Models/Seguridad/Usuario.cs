@@ -28,14 +28,15 @@ public class Usuario
         Contraseña = password;
     }
 
-    public void UpdateGrupos(List<Grupo> newGrupos)
+    public void UpdateGrupos(List<Grupo> nuevosGrupos)
     {
-        Grupos = newGrupos;
+        Grupos = nuevosGrupos;
     }
 
-    public void UpdateListOfHasToUpdateProfile(List<int> newGrupos)
+    public void UpdateListOfHasToUpdateProfile(List<int> nuevosPermisos)
     {
-        HasToUpdateProfile = newGrupos;
+        HasToUpdateProfile = nuevosPermisos;
     }
+
 
 }

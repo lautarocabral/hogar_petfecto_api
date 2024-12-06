@@ -16,5 +16,13 @@
         public string Ocupacion { get; private set; }
         public bool ExperienciaMascotas { get; private set; }
         public int NroMascotas { get; private set; }
+
+        public void UpdateAdoptante(string estadoCivil, string ocupacion, bool experienciaMascotas, int nroMascotas)
+        {
+            EstadoCivil = estadoCivil;
+            Ocupacion = ocupacion;
+            ExperienciaMascotas = experienciaMascotas;
+            NroMascotas = nroMascotas;
+        }
     }
 }

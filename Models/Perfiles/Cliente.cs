@@ -11,5 +11,11 @@
 
         public string Cuil { get; private set; }
         public string Ocupacion { get; private set; }
+
+        public void UpdateCliente(string cliente, string ocupacion)
+        {
+            Cuil = cliente;
+            Ocupacion = ocupacion;
+        }
     }
 }

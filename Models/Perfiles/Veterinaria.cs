@@ -19,6 +19,13 @@
         public string DireccionLocal { get; private set; }
         public List<Oferta> Ofertas { get; private set; }
 
-
+        public void UpdateVeterinaria(double latitud, double longitud, List<Suscripcion> suscripciones, string direccionLocal, List<Oferta> ofertas)
+        {
+            Latitud = latitud;
+            Longitud = longitud;
+            Suscripciones = suscripciones;
+            DireccionLocal = direccionLocal;
+            Ofertas = ofertas;
+        }
     }
 }

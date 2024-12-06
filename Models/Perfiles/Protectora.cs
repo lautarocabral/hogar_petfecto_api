@@ -38,5 +38,15 @@
             }
             Mascotas.Add(mascota);
         }
+
+        public void UpdateProtectora(int capacidad, int nroVoluntarios, List<Pedido> pedidos, List<Producto> productos, List<Mascota> mascotas, int cantidadInicialMascotas)
+        {
+            Capacidad = capacidad;
+            NroVoluntarios = nroVoluntarios;
+            Pedidos = pedidos;
+            Productos = productos;
+            Mascotas = mascotas;
+            CantidadInicialMascotas = cantidadInicialMascotas;
+        }
     }
 }

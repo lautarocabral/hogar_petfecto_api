@@ -37,6 +37,8 @@ namespace alumnos_api.Models
             modelBuilder.Entity<Perfil>()
                 .HasDiscriminator<string>("PerfilTipo")
                 .HasValue<Cliente>("Cliente")
+                .HasValue<Protectora>("Protectora")
+                .HasValue<Veterinaria>("Veterinaria")
                 .HasValue<Protectora>("Protectora");
 
             modelBuilder.Entity<Usuario>()

@@ -229,17 +229,16 @@ namespace hogar_petfecto_api.Controllers.Seguridad
                 return Unauthorized(ApiResponse<string>.Error("No tiene permisos para obtener permisos", 401));
             }
 
-            // Buscar usuario a modificar
             var usuarioAModificar = await _context.Usuarios
-                .Include(u => u.Persona)
-                    .ThenInclude(p => p.Localidad)
-                        .ThenInclude(l => l.Provincia)
-                .Include(u => u.Persona)
-                    .ThenInclude(p => p.Perfiles)
-                        .ThenInclude(perfil => perfil.TipoPerfil)
-                .Include(u => u.Grupos)
-                    .ThenInclude(g => g.Permisos)
-                .FirstOrDefaultAsync(u => u.PersonaDni == editarUsuarioRequestDto.Dni);
+                         .Include(u => u.Persona)
+                             .ThenInclude(p => p.Localidad)
+                                 .ThenInclude(l => l.Provincia)
+                         .Include(u => u.Persona)
+                             .ThenInclude(p => p.Perfiles)
+                                 .ThenInclude(perfil => perfil.TipoPerfil)
+                         .Include(u => u.Grupos)
+                             .ThenInclude(g => g.Permisos)
+                         .FirstOrDefaultAsync(u => u.PersonaDni == editarUsuarioRequestDto.Dni);
 
             if (usuarioAModificar == null)
             {
@@ -254,17 +253,53 @@ namespace hogar_petfecto_api.Controllers.Seguridad
             var gruposActualesIds = usuarioAModificar.Grupos.Select(g => g.Id).ToList();
             var nuevosGruposIds = editarUsuarioRequestDto.NewRoles;
 
-            // Identificar grupos agregados y eliminados
-            var gruposAgregados = nuevosGruposIds.Except(gruposActualesIds).ToList();
-            var gruposEliminados = gruposActualesIds.Except(nuevosGruposIds).ToList();
-            var gruposDistintivos = gruposAgregados;
+            // Identificar grupos agregados
+            var gruposAgregadosIds = nuevosGruposIds.Except(gruposActualesIds).ToList();
+
+            // Obtener los permisos actuales basados en los nuevos grupos seleccionados
+            var permisosActualesIds = await _context.Grupos
+                .Where(g => nuevosGruposIds.Contains(g.Id))
+                .SelectMany(g => g.Permisos)
+                .Select(p => p.Id)
+                .Where(id => new[] { 1, 2, 3, 4 }.Contains(id)) // Solo consideramos permisos 1, 2, 3, 4
+                .Distinct()
+                .ToListAsync(); // HashSet para optimizar búsquedas
+
+            // Mapear los permisos a los tipos de perfil correspondientes
+            var tipoPerfilPermisosMap = new Dictionary<int, int>
+                            {
+                                { 1, 1 }, // Adoptante -> Permiso 1
+                                { 2, 2 }, // Cliente -> Permiso 2
+                                { 3, 3 }, // Veterinaria -> Permiso 3
+                                { 4, 4 }  // Protectora -> Permiso 4
+                            };
+
+            // Eliminar perfiles que ya no tienen permisos correspondientes
+            var perfilesAEliminar = usuarioAModificar.Persona.Perfiles
+                .Where(perfil =>
+                    tipoPerfilPermisosMap.TryGetValue(perfil.TipoPerfil.Id, out var permisoId) &&
+                    !permisosActualesIds.Contains(permisoId))
+                .ToList();
+
+            foreach (var perfil in perfilesAEliminar)
+            {
+                usuarioAModificar.Persona.Perfiles.Remove(perfil);
+                _context.Remove(perfil);
+            }
+
+            // Actualizar la lista HasToUpdateProfile (con permisos actuales)
+            usuarioAModificar.UpdateListOfHasToUpdateProfile(permisosActualesIds.ToList());
 
             // Actualizar la lista de grupos del usuario
-            usuarioAModificar.UpdateListOfHasToUpdateProfile(gruposDistintivos);
             var listaDeRolesNuevos = await _context.Grupos
                 .Where(g => nuevosGruposIds.Contains(g.Id))
                 .ToListAsync();
+
             usuarioAModificar.UpdateGrupos(listaDeRolesNuevos);
+
+            // Guardar cambios en la base de datos
+            await _context.SaveChangesAsync();
+
 
             var usuarioDto = _mapper.Map<UsuarioDto>(usuario);
 

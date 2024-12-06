@@ -13,5 +13,6 @@
 
         public int Id { get; private set; }
         public TipoPerfil TipoPerfil { get; private set; }
+
     }
 }

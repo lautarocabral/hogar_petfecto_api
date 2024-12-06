@@ -46,10 +46,35 @@ namespace hogar_petfecto_api.Services
                                                 .ThenInclude(g => g.Permisos)
                                             .FirstOrDefaultAsync(u => u.Id == userId); // seteo el perfil al usuario que se cargo como adoptante
 
-                usuarioExistente.Persona.Perfiles.Add(newAdoptante);
+
+                // VALIDO SI YA TIENE UN PERFIL ACOPTANTE CARGADO para pisarlo si fue asi
+                var perfilExistente = usuarioExistente.Persona.Perfiles
+                                .OfType<Adoptante>()
+                                .FirstOrDefault(); // Obtén el primer perfil de tipo Adoptante si existe
+
+                if (perfilExistente != null)
+                {
+                    perfilExistente.UpdateAdoptante(newAdoptante.EstadoCivil, newAdoptante.Ocupacion, newAdoptante.ExperienciaMascotas, newAdoptante.NroMascotas);
+                }
+                else
+                {
+                    usuarioExistente.Persona.Perfiles.Add(newAdoptante);
+                }
+
 
 
                 usuarioExistente.Grupos.Add(grupo);
+
+                //UpdateListOfHasToUpdateProfile ya que cargo ese permiso
+                if (usuarioExistente.HasToUpdateProfile.Contains(1))
+                {
+                    // Eliminar el ID del permiso (1) de la lista
+                    usuarioExistente.HasToUpdateProfile.Remove(1);
+
+                    // Actualizar la lista después de modificarla
+                    usuarioExistente.UpdateListOfHasToUpdateProfile(usuarioExistente.HasToUpdateProfile);
+                }
+
 
 
                 if (usuarioExistente.Persona.Perfiles.Count == 4)
@@ -92,10 +117,34 @@ namespace hogar_petfecto_api.Services
                                                 .ThenInclude(g => g.Permisos)
                                             .FirstOrDefaultAsync(u => u.Id == userId); // seteo el perfil al usuario que se cargo como CLIENTE
 
-                usuarioExistente.Persona.Perfiles.Add(newCliente);
+
+
+                // VALIDO SI YA TIENE UN PERFIL CLIENTE CARGADO para pisarlo si fue asi
+                var perfilExistente = usuarioExistente.Persona.Perfiles
+                                .OfType<Cliente>()
+                                .FirstOrDefault(); // Obtén el primer perfil de tipo Protectora si existe
+
+                if (perfilExistente != null)
+                {
+                    perfilExistente.UpdateCliente(newCliente.Cuil, newCliente.Ocupacion);
+                }
+                else
+                {
+                    usuarioExistente.Persona.Perfiles.Add(newCliente);
+                }
 
 
                 usuarioExistente.Grupos.Add(grupo);
+
+                //UpdateListOfHasToUpdateProfile ya que cargo ese permiso
+                if (usuarioExistente.HasToUpdateProfile.Contains(2))
+                {
+                    // Eliminar el ID del permiso (1) de la lista
+                    usuarioExistente.HasToUpdateProfile.Remove(2);
+
+                    // Actualizar la lista después de modificarla
+                    usuarioExistente.UpdateListOfHasToUpdateProfile(usuarioExistente.HasToUpdateProfile);
+                }
 
 
                 if (usuarioExistente.Persona.Perfiles.Count == 4)
@@ -139,10 +188,32 @@ namespace hogar_petfecto_api.Services
                                                 .ThenInclude(g => g.Permisos)
                                             .FirstOrDefaultAsync(u => u.Id == userId); // seteo el perfil al usuario que se cargo como Protectora
 
-                usuarioExistente.Persona.Perfiles.Add(newProtectora);
+                // VALIDO SI YA TIENE UN PERFIL Protectora CARGADO para pisarlo si fue asi
+                var perfilExistente = usuarioExistente.Persona.Perfiles
+                                .OfType<Protectora>()
+                                .FirstOrDefault(); // Obtén el primer perfil de tipo Adoptante si existe
+
+                if (perfilExistente != null)
+                {
+                    perfilExistente.UpdateProtectora(newProtectora.Capacidad, newProtectora.NroVoluntarios, newProtectora.Pedidos, newProtectora.Productos, newProtectora.Mascotas, newProtectora.CantidadInicialMascotas);
+                }
+                else
+                {
+                    usuarioExistente.Persona.Perfiles.Add(newProtectora);
+                }
 
 
                 usuarioExistente.Grupos.Add(grupo);
+
+                //UpdateListOfHasToUpdateProfile ya que cargo ese permiso
+                if (usuarioExistente.HasToUpdateProfile.Contains(4))
+                {
+                    // Eliminar el ID del permiso (1) de la lista
+                    usuarioExistente.HasToUpdateProfile.Remove(4);
+
+                    // Actualizar la lista después de modificarla
+                    usuarioExistente.UpdateListOfHasToUpdateProfile(usuarioExistente.HasToUpdateProfile);
+                }
 
 
                 if (usuarioExistente.Persona.Perfiles.Count == 4)
@@ -201,10 +272,33 @@ namespace hogar_petfecto_api.Services
                                                 .ThenInclude(g => g.Permisos)
                                             .FirstOrDefaultAsync(u => u.Id == userId); // seteo el perfil al usuario que se cargo como Veterinaria
 
-                usuarioExistente.Persona.Perfiles.Add(newVeterinaria);
+                // VALIDO SI YA TIENE UN PERFIL Veterinaria CARGADO para pisarlo si fue asi
+                var perfilExistente = usuarioExistente.Persona.Perfiles
+                                .OfType<Veterinaria>()
+                                .FirstOrDefault(); // Obtén el primer perfil de tipo Veterinaria si existe
+
+                if (perfilExistente != null)
+                {
+                    perfilExistente.UpdateVeterinaria(newVeterinaria.Latitud, newVeterinaria.Longitud, newVeterinaria.Suscripciones, newVeterinaria.DireccionLocal, newVeterinaria.Ofertas);
+                }
+                else
+                {
+                    usuarioExistente.Persona.Perfiles.Add(newVeterinaria);
+                }
+
 
 
                 usuarioExistente.Grupos.Add(grupo);
+
+                //UpdateListOfHasToUpdateProfile ya que cargo ese permiso
+                if (usuarioExistente.HasToUpdateProfile.Contains(3))
+                {
+                    // Eliminar el ID del permiso (1) de la lista
+                    usuarioExistente.HasToUpdateProfile.Remove(3);
+
+                    // Actualizar la lista después de modificarla
+                    usuarioExistente.UpdateListOfHasToUpdateProfile(usuarioExistente.HasToUpdateProfile);
+                }
 
 
                 if (usuarioExistente.Persona.Perfiles.Count == 4)
