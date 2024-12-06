@@ -18,7 +18,9 @@ namespace hogar_petfecto_api.Models
             FechaPago = fechaPago;
             Monto = monto;
             Cliente = cliente;
+            ClienteId = cliente.Id;
             Protectora = protectora;
+            ProtectoraId = protectora.Id;
         }
 
         public int Id { get; private set; }
@@ -30,7 +32,9 @@ namespace hogar_petfecto_api.Models
         public DateTime FechaPago { get; private set; }
         public double Monto { get; private set; }
         public Cliente Cliente { get; private set; }
+        public int ClienteId { get; private set; }
         public Protectora Protectora { get; private set; }
+        public int ProtectoraId { get; private set; }
     }
 
 }

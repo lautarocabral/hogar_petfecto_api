@@ -129,7 +129,7 @@ namespace hogar_petfecto_api.Controllers
                               mascota.Descripcion,
                               mascota.Vacunado,
                               false,
-                              mascota.Imagen, protectoraProfile.Id
+                              mascota.Imagen, protectoraProfile.Id, protectoraProfile
                               ));
 
             await _context.SaveChangesAsync();

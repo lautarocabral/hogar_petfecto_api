@@ -171,7 +171,7 @@ namespace hogar_petfecto_api.Controllers
                             nuevaFechaFin,
                             monto,
                             suscripcionRequestDto.estado,
-                            suscripcion.TipoPlan
+                            suscripcion.TipoPlan, veterinariaProfile
                             )
                         );
 

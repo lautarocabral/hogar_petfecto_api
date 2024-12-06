@@ -12,8 +12,8 @@ using alumnos_api.Models;
 namespace hogar_petfecto_api.Migrations
 {
     [DbContext(typeof(GestionDbContext))]
-    [Migration("20241205201039_addedHasToUpdateProfile")]
-    partial class addedHasToUpdateProfile
+    [Migration("20241206224554_YaNoseQueTocarPor3")]
+    partial class YaNoseQueTocarPor3
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -166,6 +166,7 @@ namespace hogar_petfecto_api.Migrations
                         .HasColumnType("int");
 
                     b.Property<decimal>("Precio")
+                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<int>("ProductoId")
@@ -243,9 +244,6 @@ namespace hogar_petfecto_api.Migrations
                     b.Property<int>("ProtectoraId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("ProtectoraId1")
-                        .HasColumnType("int");
-
                     b.Property<string>("Sexo")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -259,8 +257,6 @@ namespace hogar_petfecto_api.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("ProtectoraId");
-
-                    b.HasIndex("ProtectoraId1");
 
                     b.HasIndex("TipoMascotaId");
 
@@ -319,7 +315,7 @@ namespace hogar_petfecto_api.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("VeterinariaId")
+                    b.Property<int>("VeterinariaId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -489,6 +485,7 @@ namespace hogar_petfecto_api.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("Precio")
+                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<int>("ProtectoraId")
@@ -588,7 +585,7 @@ namespace hogar_petfecto_api.Migrations
                     b.Property<int>("TipoPlan")
                         .HasColumnType("int");
 
-                    b.Property<int?>("VeterinariaId")
+                    b.Property<int>("VeterinariaId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -795,15 +792,11 @@ namespace hogar_petfecto_api.Migrations
 
             modelBuilder.Entity("hogar_petfecto_api.Models.Mascota", b =>
                 {
-                    b.HasOne("hogar_petfecto_api.Models.Perfiles.Protectora", null)
-                        .WithMany()
+                    b.HasOne("hogar_petfecto_api.Models.Perfiles.Protectora", "Protectora")
+                        .WithMany("Mascotas")
                         .HasForeignKey("ProtectoraId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
-
-                    b.HasOne("hogar_petfecto_api.Models.Perfiles.Protectora", null)
-                        .WithMany("Mascotas")
-                        .HasForeignKey("ProtectoraId1");
 
                     b.HasOne("hogar_petfecto_api.Models.TipoMascota", "TipoMascota")
                         .WithMany()
@@ -811,14 +804,20 @@ namespace hogar_petfecto_api.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.Navigation("Protectora");
+
                     b.Navigation("TipoMascota");
                 });
 
             modelBuilder.Entity("hogar_petfecto_api.Models.Oferta", b =>
                 {
-                    b.HasOne("hogar_petfecto_api.Models.Perfiles.Veterinaria", null)
+                    b.HasOne("hogar_petfecto_api.Models.Perfiles.Veterinaria", "Veterinaria")
                         .WithMany("Ofertas")
-                        .HasForeignKey("VeterinariaId");
+                        .HasForeignKey("VeterinariaId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Veterinaria");
                 });
 
             modelBuilder.Entity("hogar_petfecto_api.Models.Pedido", b =>
@@ -918,9 +917,13 @@ namespace hogar_petfecto_api.Migrations
 
             modelBuilder.Entity("hogar_petfecto_api.Models.Suscripcion", b =>
                 {
-                    b.HasOne("hogar_petfecto_api.Models.Perfiles.Veterinaria", null)
+                    b.HasOne("hogar_petfecto_api.Models.Perfiles.Veterinaria", "Veterinaria")
                         .WithMany("Suscripciones")
-                        .HasForeignKey("VeterinariaId");
+                        .HasForeignKey("VeterinariaId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Veterinaria");
                 });
 
             modelBuilder.Entity("hogar_petfecto_api.Models.Pedido", b =>

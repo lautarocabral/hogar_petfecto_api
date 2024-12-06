@@ -1,6 +1,4 @@
-﻿// Licensed to the .NET Foundation under one or more agreements.
-// The .NET Foundation licenses this file to you under the MIT license.
-// See the LICENSE file in the project root for more information.
+﻿using hogar_petfecto_api.Models.Perfiles;
 
 namespace hogar_petfecto_api.Models
 {
@@ -16,10 +14,23 @@ namespace hogar_petfecto_api.Models
         public DateTime FechaFin { get; private set; }
         public bool Activo { get; private set; }
 
-        // Constructor para inicializar la oferta
-        public Oferta(int id, string producto, string imagen, string titulo, string descripcion, double descuento, DateTime fechaInicio, DateTime fechaFin, bool activo)
+        // Relación con Veterinaria
+        public int VeterinariaId { get; private set; }
+        public Veterinaria Veterinaria { get; private set; }
+
+        private Oferta() { }
+
+        public Oferta(
+            string producto,
+            string imagen,
+            string titulo,
+            string descripcion,
+            double descuento,
+            DateTime fechaInicio,
+            DateTime fechaFin,
+            bool activo,
+            Veterinaria veterinaria)
         {
-            Id = id;
             Producto = producto;
             Imagen = imagen;
             Titulo = titulo;
@@ -28,48 +39,29 @@ namespace hogar_petfecto_api.Models
             FechaInicio = fechaInicio;
             FechaFin = fechaFin;
             Activo = activo;
+            Veterinaria = veterinaria ?? throw new ArgumentNullException(nameof(veterinaria));
+            VeterinariaId = veterinaria.Id;
         }
 
-        // Métodos para actualizar cada propiedad
-        public void SetProducto(string producto)
+        // Método para actualizar propiedades
+        public void Update(
+            string producto,
+            string imagen,
+            string titulo,
+            string descripcion,
+            double descuento,
+            DateTime fechaInicio,
+            DateTime fechaFin,
+            bool activo)
         {
             Producto = producto;
-        }
-
-        public void SetImagen(string imagen)
-        {
             Imagen = imagen;
-        }
-
-        public void SetTitulo(string titulo)
-        {
             Titulo = titulo;
-        }
-
-        public void SetDescripcion(string descripcion)
-        {
             Descripcion = descripcion;
-        }
-
-        public void SetDescuento(double descuento)
-        {
             Descuento = descuento;
-        }
-
-        public void SetFechaInicio(DateTime fechaInicio)
-        {
             FechaInicio = fechaInicio;
-        }
-
-        public void SetFechaFin(DateTime fechaFin)
-        {
             FechaFin = fechaFin;
-        }
-
-        public void SetActivo(bool activo)
-        {
             Activo = activo;
         }
     }
-
 }

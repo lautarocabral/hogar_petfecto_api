@@ -22,44 +22,60 @@ namespace alumnos_api.Models
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            // Configuración de Pedido
             modelBuilder.Entity<Pedido>()
-                   .HasOne(p => p.Cliente)
-                   .WithMany() // No hay una colección en Cliente que apunte a Pedido
-                   .HasForeignKey("ClienteId") // Configura la clave foránea
-                   .OnDelete(DeleteBehavior.Restrict); // Usar Restrict para evitar problemas de cascada
+                .HasOne(p => p.Cliente)
+                .WithMany()
+                .HasForeignKey(p => p.ClienteId)
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<Pedido>()
                 .HasOne(p => p.Protectora)
-                .WithMany() // No hay una colección en Protectora que apunte a Pedido
-                .HasForeignKey("ProtectoraId") // Configura la clave foránea
-                .OnDelete(DeleteBehavior.Restrict); // Usar Restrict para evitar problemas de cascada
+                .WithMany()
+                .HasForeignKey(p => p.ProtectoraId) // Asegúrate de usar la clave correcta
+                .OnDelete(DeleteBehavior.Restrict);
 
+            // Configuración de precisión para precios
+            modelBuilder.Entity<LineaPedido>()
+                .Property(lp => lp.Precio)
+                .HasPrecision(18, 2);
+
+            modelBuilder.Entity<Producto>()
+                .Property(p => p.Precio)
+                .HasPrecision(18, 2);
+
+            // Configuración de Suscripción
+            modelBuilder.Entity<Suscripcion>()
+                .HasOne(s => s.Veterinaria)
+                .WithMany(v => v.Suscripciones)
+                .HasForeignKey(s => s.VeterinariaId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // Configuración de Oferta
+            modelBuilder.Entity<Oferta>()
+                .HasOne(o => o.Veterinaria)
+                .WithMany(v => v.Ofertas)
+                .HasForeignKey(o => o.VeterinariaId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // Configuración del discriminador para Perfil
             modelBuilder.Entity<Perfil>()
                 .HasDiscriminator<string>("PerfilTipo")
                 .HasValue<Cliente>("Cliente")
                 .HasValue<Protectora>("Protectora")
-                .HasValue<Veterinaria>("Veterinaria")
-                .HasValue<Protectora>("Protectora");
-
-            modelBuilder.Entity<Usuario>()
-                .HasOne(u => u.Persona)
-                .WithOne(p => p.Usuario)
-                .HasForeignKey<Usuario>(u => u.PersonaDni) // Configura PersonaDni como clave foránea
-                .IsRequired();
+                .HasValue<Veterinaria>("Veterinaria");
 
             modelBuilder.Entity<Mascota>()
-                .HasOne<Protectora>() // Relación hacia Protectora
-                .WithMany()           // No necesitas la colección explícita
-                .HasForeignKey(m => m.ProtectoraId)
-                .OnDelete(DeleteBehavior.Restrict); // Cambiar a Restrict
+            .HasOne(m => m.Protectora) // Relación hacia Protectora
+            .WithMany(p => p.Mascotas) // Una Protectora puede tener muchas Mascotas
+            .HasForeignKey(m => m.ProtectoraId) // Clave foránea explícita
+            .OnDelete(DeleteBehavior.Restrict); // No borrar en cascada
 
-            modelBuilder.Entity<Producto>()
-               .HasOne(p => p.Protectora)
-               .WithMany(p => p.Productos)
-               .HasForeignKey(p => p.ProtectoraId);
 
             base.OnModelCreating(modelBuilder);
         }
+
+
 
         public DbSet<Adoptante> Adoptantes { get; set; }
         public DbSet<Cliente> Clientes { get; set; }

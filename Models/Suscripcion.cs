@@ -1,39 +1,46 @@
-﻿namespace hogar_petfecto_api.Models
+﻿using hogar_petfecto_api.Models.Perfiles;
+
+namespace hogar_petfecto_api.Models
 {
     public class Suscripcion
     {
-        // Atributos de la clase
         public int Id { get; private set; }
         public DateTime FechaInicio { get; private set; }
         public DateTime FechaFin { get; private set; }
         public double Monto { get; private set; }
         public bool Estado { get; private set; }
         public TipoPlan TipoPlan { get; private set; }
+        public int VeterinariaId { get; private set; } // Clave foránea
+        public Veterinaria Veterinaria { get; private set; } // Propiedad de navegación
 
-        // Constructor para inicializar una nueva suscripción
-        public Suscripcion( DateTime fechaInicio, DateTime fechaFin, double monto, bool estado, TipoPlan tipoPlan)
+        // Constructor predeterminado requerido por EF Core
+        private Suscripcion() { }
+
+        // Constructor principal para inicialización
+        public Suscripcion(DateTime fechaInicio, DateTime fechaFin, double monto, bool estado, TipoPlan tipoPlan, Veterinaria veterinaria)
         {
             FechaInicio = fechaInicio;
             FechaFin = fechaFin;
             Monto = monto;
             Estado = estado;
             TipoPlan = tipoPlan;
+            Veterinaria = veterinaria ?? throw new ArgumentNullException(nameof(veterinaria));
+            VeterinariaId = veterinaria.Id;
         }
 
-        // Método para actualizar el estado de la suscripción
+        // Métodos adicionales para cambiar propiedades si es necesario
         public void CambiarEstado(bool nuevoEstado, DateTime nuevaFechaFin)
         {
             Estado = nuevoEstado;
             FechaFin = nuevaFechaFin;
-
         }
+
         public void CambiarPlan(TipoPlan nuevoPlan, DateTime nuevaFechaFin)
         {
             TipoPlan = nuevoPlan;
             FechaFin = nuevaFechaFin;
         }
 
-        // Método para extender la fecha de finalización de la suscripción
         public void ExtenderSuscripcion(DateTime nuevaFechaFin)
         {
             if (nuevaFechaFin > FechaFin)
@@ -41,8 +48,8 @@
                 FechaFin = nuevaFechaFin;
             }
         }
-
     }
+
 
     public enum TipoPlan
     {

@@ -248,11 +248,31 @@ namespace hogar_petfecto_api.Services
                 }
 
 
-                List<Suscripcion> suscripciones = new List<Suscripcion>();
-                suscripciones.Add(new Suscripcion(veterinariaDto.Suscripciones[0].FechaInicio, fechaFin, veterinariaDto.Suscripciones[0].Monto, true, tipoPlan));
+                // Crear instancia de Veterinaria sin suscripciones iniciales
+                Veterinaria newVeterinaria = new Veterinaria(
+                    tipoPerfilVeterinaria,
+                    veterinariaDto.Latitud,
+                    veterinariaDto.Longitud,
+                    new List<Suscripcion>(), // Lista vacía inicial
+                    veterinariaDto.DireccionLocal,
+                    new List<Oferta>()
+                );
 
-                Veterinaria newVeterinaria = new Veterinaria(tipoPerfilVeterinaria, veterinariaDto.Latitud, veterinariaDto.Longitud, suscripciones
-                    , veterinariaDto.DireccionLocal, new List<Oferta>());
+                // Crear suscripciones asociadas a la veterinaria
+                List<Suscripcion> suscripciones = new List<Suscripcion>();
+                var suscripcionInicial = new Suscripcion(
+                    veterinariaDto.Suscripciones[0].FechaInicio,
+                    fechaFin,
+                    veterinariaDto.Suscripciones[0].Monto,
+                    true,
+                    tipoPlan,
+                    newVeterinaria
+                );
+                suscripciones.Add(suscripcionInicial);
+
+                // Agregar las suscripciones a la veterinaria
+                newVeterinaria.Suscripciones.AddRange(suscripciones);
+
 
                 var grupo = await _context.Grupos.Include(g => g.Permisos).FirstOrDefaultAsync(g => g.Id == 5); // el usuario se registra con id 2 que corresponde a Veterinaria
                 if (grupo == null)

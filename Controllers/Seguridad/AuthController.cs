@@ -6,6 +6,7 @@ using hogar_petfecto_api.Models;
 using hogar_petfecto_api.Models.Dtos;
 using hogar_petfecto_api.Models.Dtos.Request;
 using hogar_petfecto_api.Models.Dtos.Response;
+using hogar_petfecto_api.Models.Perfiles;
 using hogar_petfecto_api.Models.Seguridad;
 using hogar_petfecto_api.Services;
 using hogar_petfecto_api.Services.Interface;
@@ -283,9 +284,17 @@ namespace hogar_petfecto_api.Controllers.Seguridad
 
             foreach (var perfil in perfilesAEliminar)
             {
+                // Verificar dependencias dinámicamente
+                if (await TieneDependenciasAsync(perfil))
+                {
+                    return BadRequest(ApiResponse<string>.Error($"No se puede eliminar el perfil {perfil.GetType().Name} porque tiene dependencias asociadas."));
+                }
+
+                // Eliminar el perfil
                 usuarioAModificar.Persona.Perfiles.Remove(perfil);
                 _context.Remove(perfil);
             }
+
 
             // Actualizar la lista HasToUpdateProfile (con permisos actuales)
             usuarioAModificar.UpdateListOfHasToUpdateProfile(permisosActualesIds.ToList());
@@ -314,7 +323,71 @@ namespace hogar_petfecto_api.Controllers.Seguridad
             return Ok(ApiResponse<LoginResponseDto>.Success(response));
         }
 
+        private async Task<bool> TieneDependenciasAsync(Perfil perfil)
+        {
+            if (perfil is Veterinaria veterinaria)
+            {
+                return await _context.Suscripciones.AnyAsync(s => s.VeterinariaId == veterinaria.Id);
+            }
+            else if (perfil is Protectora protectora)
+            {
+                //var tienePedidos = await _context.Pedidos.AnyAsync(p => p.Protectora.Id == protectora.Id);
+                var tieneProductos = await _context.Productos.AnyAsync(p => p.ProtectoraId == protectora.Id);
+                var tieneMascotas = await _context.Mascotas.AnyAsync(m => m.ProtectoraId == protectora.Id);
 
+                return tieneProductos || tieneMascotas;
+            }
+
+            return false;
+        }
+
+        [HttpGet("DeleteUsuario/{dni}")]
+        public async Task<IActionResult> DeleteUsuario(string dni)
+        {
+            // AUTH/////////////////////////////////////////////////////////////////////////////////
+            var claimsPrincipal = _unitOfWork.AuthService.GetClaimsPrincipalFromToken(HttpContext);
+            if (claimsPrincipal == null)
+            {
+                return Unauthorized(ApiResponse<string>.Error("Token inválido", 401));
+            }
+            var userId = claimsPrincipal.FindFirst("userId")?.Value;
+            var usuario = await _unitOfWork.AuthService.ReturnUsuario(userId);
+            var token = _unitOfWork.AuthService.GenerarToken(usuario);
+            ////////////VALIDA PERMISO DE USUARIO//////////////////////////////////////////////////////////
+            bool hasPermiso = usuario.Grupos.Any(grupo => grupo.Permisos.Any(p => p.Id == 9));
+
+            if (!hasPermiso)
+            {
+                return Unauthorized(ApiResponse<string>.Error("No tiene permisos para obtener usuarios", 401));
+            }
+            ////////////VALIDA PERMISO DE USUARIO//////////////////////////////////////////////////////////
+            //AUTH/////////////////////////////////////////////////////////////////////////////////
+
+            try
+            {
+                var usuarioAEliminar = await _context.Usuarios
+               .Include(p => p.Persona).ThenInclude(per => per.Perfiles).ThenInclude(per => per.TipoPerfil).Include(p => p.Persona).ThenInclude(l => l.Localidad).ThenInclude(l => l.Provincia)
+               .Include(g => g.Grupos).ThenInclude(m => m.Permisos).FirstOrDefaultAsync(user => user.PersonaDni == dni);
+
+
+                _context.Usuarios.Remove(usuarioAEliminar);
+                await _context.SaveChangesAsync();
+
+                var usuarioDto = _mapper.Map<UsuarioDto>(usuario);
+
+                var response = new LoginResponseDto
+                {
+                    token = token,
+                    UsuarioResponseDto = usuarioDto
+                };
+
+                return Ok(ApiResponse<LoginResponseDto>.Success(response));
+            }
+            catch (Exception e)
+            {
+                return Ok(ApiResponse<string>.Error(e.Message));
+            }
+        }
     }
 
 }
