@@ -3,7 +3,7 @@
     public class Veterinaria : Perfil
     {
         private Veterinaria() : base(default) { }
-        public Veterinaria(TipoPerfil tipoPerfil, double latitud, double longitud, List<Suscripcion> suscripciones, string direccionLocal, List<Oferta> ofertas)
+        public Veterinaria(TipoPerfil tipoPerfil, double latitud, double longitud, List<Suscripcion> suscripciones, string direccionLocal, List<Oferta> ofertas, string nombre, string telefono)
             : base(tipoPerfil)
         {
             Latitud = latitud;
@@ -11,6 +11,8 @@
             Suscripciones = suscripciones ?? new List<Suscripcion>();
             DireccionLocal = direccionLocal;
             Ofertas = ofertas;
+            Nombre = nombre;
+            Telefono = telefono;
         }
 
         public double Latitud { get; private set; }
@@ -18,6 +20,8 @@
         public List<Suscripcion> Suscripciones { get; private set; }
         public string DireccionLocal { get; private set; }
         public List<Oferta> Ofertas { get; private set; }
+        public string Nombre { get; private set; }
+        public string Telefono { get; private set; }
 
         public void UpdateVeterinaria(double latitud, double longitud, List<Suscripcion> suscripciones, string direccionLocal, List<Oferta> ofertas)
         {

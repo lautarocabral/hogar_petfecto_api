@@ -579,6 +579,26 @@ namespace hogar_petfecto_api.Controllers.Seguridad
 
             return Ok(ApiResponse<LoginResponseDto>.Success(response));
         }
+
+        [HttpPost("RecuprarClave")]
+        public async Task<IActionResult> RecuprarClave(RecuperarClaveRequestDto recuperarClaveRequestDto)
+        {
+
+            var usuarioARecuperar = await _context.Usuarios.FirstOrDefaultAsync(u => u.Email == recuperarClaveRequestDto.Email);
+
+            if (usuarioARecuperar == null)
+            {
+                return Ok(ApiResponse<string>.Error($"No se encontro un usuario con el Email: {recuperarClaveRequestDto.Email}"));
+            }
+
+            usuarioARecuperar.UpdateUser(recuperarClaveRequestDto.Email, HashPassword(recuperarClaveRequestDto.NewPassword));
+
+            // Guardar cambios en la base de datos
+            await _context.SaveChangesAsync();
+
+
+            return Ok(ApiResponse<string>.Success("Clave recuperada con exito"));
+        }
     }
 
 }

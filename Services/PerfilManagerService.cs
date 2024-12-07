@@ -255,7 +255,9 @@ namespace hogar_petfecto_api.Services
                     veterinariaDto.Longitud,
                     new List<Suscripcion>(), // Lista vacía inicial
                     veterinariaDto.DireccionLocal,
-                    new List<Oferta>()
+                    new List<Oferta>(),
+                    veterinariaDto.Nombre,
+                    veterinariaDto.Telefono
                 );
 
                 // Crear suscripciones asociadas a la veterinaria

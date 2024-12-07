@@ -101,7 +101,7 @@ namespace hogar_petfecto_api.Controllers
             }
         }
 
-        [HttpGet("CambiarEstadoSuscripcion")]
+        [HttpPost("CambiarEstadoSuscripcion")]
         public async Task<IActionResult> CambiarEstadoSuscripcion([FromBody] SuscripcionRequestDto suscripcionRequestDto)
         {
             try
@@ -287,5 +287,71 @@ namespace hogar_petfecto_api.Controllers
             }
         }
 
+
+        [HttpGet("GetVeterinarias")]
+        public async Task<IActionResult> GetVeterinarias()
+        {
+            try
+            {
+                // AUTH/////////////////////////////////////////////////////////////////////////////////
+                var claimsPrincipal = _unitOfWork.AuthService.GetClaimsPrincipalFromToken(HttpContext);
+                if (claimsPrincipal == null)
+                {
+                    return Unauthorized(ApiResponse<string>.Error("Token inválido", 401));
+                }
+                var userId = claimsPrincipal.FindFirst("userId")?.Value;
+                var usuario = await _unitOfWork.AuthService.ReturnUsuario(userId);
+                var token = _unitOfWork.AuthService.GenerarToken(usuario);
+                //////////////VALIDA PERMISO DE USUARIO//////////////////////////////////////////////////////////
+                //bool hasPermiso = usuario.Grupos.Any(grupo => grupo.Permisos.Any(p => p.Id == 3));
+
+                //if (!hasPermiso)
+                //{
+                //    return Unauthorized(ApiResponse<string>.Error("No tiene permisos para editar suscripciones", 401));
+                //}
+                //////////////VALIDA PERMISO DE USUARIO//////////////////////////////////////////////////////////
+                //AUTH/////////////////////////////////////////////////////////////////////////////////
+                var usuariosVeterinaria = await _context.Usuarios
+                                                .Include(u => u.Persona)
+                                                    .ThenInclude(p => p.Perfiles)
+                                                        .ThenInclude(p => (p as Veterinaria).Suscripciones)
+                                                .Include(u => u.Persona)
+                                                    .ThenInclude(p => p.Perfiles)
+                                                        .ThenInclude(p => (p as Veterinaria).Ofertas)
+                                                .ToListAsync();
+
+                if (usuariosVeterinaria == null || !usuariosVeterinaria.Any())
+                {
+                    return NotFound("Usuarios o perfiles veterinarios no encontrados.");
+                }
+
+                var perfilesVeterinarias = usuariosVeterinaria
+                    .SelectMany(u => u.Persona.Perfiles)
+                    .OfType<Veterinaria>().Where(s=>s.Suscripciones.OrderByDescending(s => s.Id).FirstOrDefault().Estado == true) //Traigo las que tienen suscriupcion activa
+                    .ToList();
+
+                if (!perfilesVeterinarias.Any())
+                {
+                    return NotFound("No se encontraron perfiles de tipo Veterinaria.");
+                }
+
+                var perfilesVeterinariasDto = _mapper.Map<List<VeterinariaDto>>(perfilesVeterinarias);
+
+                var response = new VeterinariaResponseDto
+                {
+                    token = token,
+                    Veterinarias = perfilesVeterinariasDto
+                };
+
+                return Ok(ApiResponse<VeterinariaResponseDto>.Success(response));
+
+
+            }
+            catch (Exception e)
+            {
+
+                return Ok(ApiResponse<Exception>.Error(e.Message));
+            }
+        }
     }
 }
