@@ -3,14 +3,15 @@
     public class Grupo
     {
 
-        public Grupo()
+        private Grupo()
         {
 
         }
 
-        public Grupo(string descripcion)
+        public Grupo(string descripcion, List<Permiso> permisos)
         {
-            this.Descripcion = descripcion;
+            Descripcion = descripcion;
+            Permisos = permisos;
         }
 
         public void UpdatePermisos(List<Permiso> permisos)

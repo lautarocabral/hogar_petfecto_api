@@ -264,22 +264,34 @@ namespace hogar_petfecto_api.Controllers.Seguridad
                 .Select(p => p.Id)
                 .Where(id => new[] { 1, 2, 3, 4 }.Contains(id)) // Solo consideramos permisos 1, 2, 3, 4
                 .Distinct()
-                .ToListAsync(); // HashSet para optimizar búsquedas
+                .ToListAsync();
 
-            // Mapear los permisos a los tipos de perfil correspondientes
-            var tipoPerfilPermisosMap = new Dictionary<int, int>
-                            {
-                                { 1, 1 }, // Adoptante -> Permiso 1
-                                { 2, 2 }, // Cliente -> Permiso 2
-                                { 3, 3 }, // Veterinaria -> Permiso 3
-                                { 4, 4 }  // Protectora -> Permiso 4
-                            };
+            // Obtener los permisos actuales del usuario basados en los grupos actuales
+            var permisosUsuarioActualesIds = usuarioAModificar.Grupos
+                .SelectMany(g => g.Permisos)
+                .Select(p => p.Id)
+                .Where(id => new[] { 1, 2, 3, 4 }.Contains(id))
+                .Distinct()
+                .ToHashSet(); // HashSet para optimizar búsquedas
+
+            // Obtener los nuevos permisos que no están ya en los permisos actuales del usuario
+            var nuevosPermisosParaActualizar = permisosActualesIds
+                .Where(id => !permisosUsuarioActualesIds.Contains(id)) // Filtrar permisos que no tenía previamente
+                .ToList();
 
             // Eliminar perfiles que ya no tienen permisos correspondientes
+            var tipoPerfilPermisosMap = new Dictionary<int, int>
+                {
+                    { 1, 1 }, // Adoptante -> Permiso 1
+                    { 2, 2 }, // Cliente -> Permiso 2
+                    { 3, 3 }, // Veterinaria -> Permiso 3
+                    { 4, 4 }  // Protectora -> Permiso 4
+                };
+
             var perfilesAEliminar = usuarioAModificar.Persona.Perfiles
                 .Where(perfil =>
                     tipoPerfilPermisosMap.TryGetValue(perfil.TipoPerfil.Id, out var permisoId) &&
-                    !permisosActualesIds.Contains(permisoId))
+                    !permisosActualesIds.Contains(permisoId)) // Eliminar si no corresponde al nuevo permiso
                 .ToList();
 
             foreach (var perfil in perfilesAEliminar)
@@ -295,9 +307,8 @@ namespace hogar_petfecto_api.Controllers.Seguridad
                 _context.Remove(perfil);
             }
 
-
-            // Actualizar la lista HasToUpdateProfile (con permisos actuales)
-            usuarioAModificar.UpdateListOfHasToUpdateProfile(permisosActualesIds.ToList());
+            // Actualizar la lista HasToUpdateProfile con los nuevos permisos
+            usuarioAModificar.UpdateListOfHasToUpdateProfile(nuevosPermisosParaActualizar);
 
             // Actualizar la lista de grupos del usuario
             var listaDeRolesNuevos = await _context.Grupos
@@ -308,6 +319,7 @@ namespace hogar_petfecto_api.Controllers.Seguridad
 
             // Guardar cambios en la base de datos
             await _context.SaveChangesAsync();
+
 
 
             var usuarioDto = _mapper.Map<UsuarioDto>(usuario);
@@ -353,23 +365,40 @@ namespace hogar_petfecto_api.Controllers.Seguridad
             var userId = claimsPrincipal.FindFirst("userId")?.Value;
             var usuario = await _unitOfWork.AuthService.ReturnUsuario(userId);
             var token = _unitOfWork.AuthService.GenerarToken(usuario);
-            ////////////VALIDA PERMISO DE USUARIO//////////////////////////////////////////////////////////
-            bool hasPermiso = usuario.Grupos.Any(grupo => grupo.Permisos.Any(p => p.Id == 9));
 
+            bool hasPermiso = usuario.Grupos.Any(grupo => grupo.Permisos.Any(p => p.Id == 9));
             if (!hasPermiso)
             {
                 return Unauthorized(ApiResponse<string>.Error("No tiene permisos para obtener usuarios", 401));
             }
-            ////////////VALIDA PERMISO DE USUARIO//////////////////////////////////////////////////////////
-            //AUTH/////////////////////////////////////////////////////////////////////////////////
 
             try
             {
                 var usuarioAEliminar = await _context.Usuarios
-               .Include(p => p.Persona).ThenInclude(per => per.Perfiles).ThenInclude(per => per.TipoPerfil).Include(p => p.Persona).ThenInclude(l => l.Localidad).ThenInclude(l => l.Provincia)
-               .Include(g => g.Grupos).ThenInclude(m => m.Permisos).FirstOrDefaultAsync(user => user.PersonaDni == dni);
+                    .Include(p => p.Persona).ThenInclude(per => per.Perfiles).ThenInclude(per => per.TipoPerfil)
+                    .Include(p => p.Persona).ThenInclude(l => l.Localidad).ThenInclude(l => l.Provincia)
+                    .Include(g => g.Grupos).ThenInclude(m => m.Permisos)
+                    .FirstOrDefaultAsync(user => user.PersonaDni == dni);
 
+                if (usuarioAEliminar == null)
+                {
+                    return NotFound(ApiResponse<string>.Error("Usuario no encontrado", 404));
+                }
 
+                // Manejar relaciones con mascotas
+                if (usuarioAEliminar.Persona.Perfiles.OfType<Protectora>().Any())
+                {
+                    var protectoraPerfil = usuarioAEliminar.Persona.Perfiles.OfType<Protectora>().First();
+
+                    var mascotasAsociadas = await _context.Mascotas
+                        .Where(m => m.ProtectoraId == protectoraPerfil.Id)
+                        .ToListAsync();
+
+                    // Eliminar mascotas asociadas
+                    _context.Mascotas.RemoveRange(mascotasAsociadas);
+                }
+
+                // Eliminar el usuario
                 _context.Usuarios.Remove(usuarioAEliminar);
                 await _context.SaveChangesAsync();
 
@@ -387,6 +416,168 @@ namespace hogar_petfecto_api.Controllers.Seguridad
             {
                 return Ok(ApiResponse<string>.Error(e.Message));
             }
+        }
+
+
+        [HttpPost("EditarGrupo")]
+        public async Task<IActionResult> EditarGrupo(EditarGrupoResponseDto editarGrupoResponseDto)
+        {
+            // AUTH/////////////////////////////////////////////////////////////////////////////////
+            var claimsPrincipal = _unitOfWork.AuthService.GetClaimsPrincipalFromToken(HttpContext);
+            if (claimsPrincipal == null)
+            {
+                return Unauthorized(ApiResponse<string>.Error("Token inválido", 401));
+            }
+            var userId = claimsPrincipal.FindFirst("userId")?.Value;
+            var usuario = await _unitOfWork.AuthService.ReturnUsuario(userId);
+            var token = _unitOfWork.AuthService.GenerarToken(usuario);
+            ////////////VALIDA PERMISO DE USUARIO//////////////////////////////////////////////////////////
+            bool hasPermiso = usuario.Grupos.Any(grupo => grupo.Permisos.Any(p => p.Id == 9));
+
+            if (!hasPermiso)
+            {
+                return Unauthorized(ApiResponse<string>.Error("No tiene permisos para obtener permisos", 401));
+            }
+            ////////////VALIDA PERMISO DE USUARIO//////////////////////////////////////////////////////////
+            //AUTH/////////////////////////////////////////////////////////////////////////////////
+
+            // Obtener grupo
+            var grupo = await _context.Grupos
+                .Include(g => g.Permisos) // Incluimos los permisos existentes para actualización
+                .FirstOrDefaultAsync(g => g.Id == editarGrupoResponseDto.GrupoId);
+
+            if (grupo == null)
+            {
+                return NotFound(ApiResponse<string>.Error($"Grupo con ID {editarGrupoResponseDto.GrupoId} no encontrado", 404));
+            }
+
+            // Validar permisos proporcionados
+            var permisos = await _context.Permisos
+                .Where(p => editarGrupoResponseDto.PermisosId.Contains(p.Id))
+                .ToListAsync();
+
+            if (permisos.Count != editarGrupoResponseDto.PermisosId.Count)
+            {
+                return BadRequest(ApiResponse<string>.Error("Algunos permisos no existen en el sistema", 400));
+            }
+
+            // Actualizar permisos del grupo
+            grupo.UpdatePermisos(permisos);
+
+            // Guardar cambios en la base de datos
+            await _context.SaveChangesAsync();
+
+            // Generar respuesta
+            var usuarioDto = _mapper.Map<UsuarioDto>(usuario);
+
+            var response = new LoginResponseDto
+            {
+                token = token,
+                UsuarioResponseDto = usuarioDto
+            };
+
+            return Ok(ApiResponse<LoginResponseDto>.Success(response));
+        }
+
+
+        [HttpPost("AgregarGrupo")]
+        public async Task<IActionResult> AgregarGrupo(EditarGrupoResponseDto editarGrupoResponseDto)
+        {
+            // AUTH/////////////////////////////////////////////////////////////////////////////////
+            var claimsPrincipal = _unitOfWork.AuthService.GetClaimsPrincipalFromToken(HttpContext);
+            if (claimsPrincipal == null)
+            {
+                return Unauthorized(ApiResponse<string>.Error("Token inválido", 401));
+            }
+            var userId = claimsPrincipal.FindFirst("userId")?.Value;
+            var usuario = await _unitOfWork.AuthService.ReturnUsuario(userId);
+            var token = _unitOfWork.AuthService.GenerarToken(usuario);
+            ////////////VALIDA PERMISO DE USUARIO//////////////////////////////////////////////////////////
+            bool hasPermiso = usuario.Grupos.Any(grupo => grupo.Permisos.Any(p => p.Id == 9));
+
+            if (!hasPermiso)
+            {
+                return Unauthorized(ApiResponse<string>.Error("No tiene permisos para obtener permisos", 401));
+            }
+            ////////////VALIDA PERMISO DE USUARIO//////////////////////////////////////////////////////////
+            //AUTH/////////////////////////////////////////////////////////////////////////////////
+
+            // Validar permisos proporcionados
+            var permisos = await _context.Permisos
+                .Where(p => editarGrupoResponseDto.PermisosId.Contains(p.Id))
+                .ToListAsync();
+
+            if (permisos.Count != editarGrupoResponseDto.PermisosId.Count)
+            {
+                return BadRequest(ApiResponse<string>.Error("Algunos permisos no existen en el sistema", 400));
+            }
+
+            var newGrupo = new Grupo(editarGrupoResponseDto.GrupoNombre, permisos);
+
+            // Obtener grupo
+            _context.Grupos.Add(newGrupo);
+
+
+            // Guardar cambios en la base de datos
+            await _context.SaveChangesAsync();
+
+            // Generar respuesta
+            var usuarioDto = _mapper.Map<UsuarioDto>(usuario);
+
+            var response = new LoginResponseDto
+            {
+                token = token,
+                UsuarioResponseDto = usuarioDto
+            };
+
+            return Ok(ApiResponse<LoginResponseDto>.Success(response));
+        }
+
+        [HttpGet("DeleteGrupo/{id}")]
+        public async Task<IActionResult> DeleteGrupo(int id)
+        {
+            // AUTH/////////////////////////////////////////////////////////////////////////////////
+            var claimsPrincipal = _unitOfWork.AuthService.GetClaimsPrincipalFromToken(HttpContext);
+            if (claimsPrincipal == null)
+            {
+                return Unauthorized(ApiResponse<string>.Error("Token inválido", 401));
+            }
+            var userId = claimsPrincipal.FindFirst("userId")?.Value;
+            var usuario = await _unitOfWork.AuthService.ReturnUsuario(userId);
+            var token = _unitOfWork.AuthService.GenerarToken(usuario);
+            ////////////VALIDA PERMISO DE USUARIO//////////////////////////////////////////////////////////
+            bool hasPermiso = usuario.Grupos.Any(grupo => grupo.Permisos.Any(p => p.Id == 9));
+
+            if (!hasPermiso)
+            {
+                return Unauthorized(ApiResponse<string>.Error("No tiene permisos para obtener permisos", 401));
+            }
+            ////////////VALIDA PERMISO DE USUARIO//////////////////////////////////////////////////////////
+            //AUTH/////////////////////////////////////////////////////////////////////////////////
+
+            var grupo = await _context.Grupos.FirstOrDefaultAsync(g => g.Id == id);
+
+            if (grupo == null)
+            {
+                return NotFound(ApiResponse<string>.Error($"Grupo con ID {id} no encontrado", 404));
+            }
+
+            // Eliminar el grupo
+            _context.Grupos.Remove(grupo);
+
+            // Guardar cambios en la base de datos
+            await _context.SaveChangesAsync();
+
+            // Generar respuesta
+            var usuarioDto = _mapper.Map<UsuarioDto>(usuario);
+
+            var response = new LoginResponseDto
+            {
+                token = token,
+                UsuarioResponseDto = usuarioDto
+            };
+
+            return Ok(ApiResponse<LoginResponseDto>.Success(response));
         }
     }
 
