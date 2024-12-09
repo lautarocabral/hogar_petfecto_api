@@ -21,7 +21,7 @@ namespace hogar_petfecto_api.Models
             bool vacunado,
             bool adoptado,
             string imagen,
-            int protectoraId, Protectora protectora)
+            int protectoraId, Protectora protectora, bool activo)
         {
             TipoMascota = tipoMascota;
             Nombre = nombre;
@@ -38,6 +38,7 @@ namespace hogar_petfecto_api.Models
             ProtectoraId = protectoraId;
             TipoMascotaId = tipoMascota.Id;
             Protectora = protectora;
+            Activo = activo;
         }
 
         public int Id { get; private set; }
@@ -56,6 +57,7 @@ namespace hogar_petfecto_api.Models
         public string Descripcion { get; private set; }
         public int ProtectoraId { get; private set; }
         public Protectora Protectora { get; private set; }
+        public bool Activo { get; private set; }
 
 
 
@@ -91,6 +93,12 @@ namespace hogar_petfecto_api.Models
         {
 
             Adoptado = adoptado;
+        }
+        public void UpdateState(bool state)
+        {
+
+            Activo = state;
+
         }
     }
 }

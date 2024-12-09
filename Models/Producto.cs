@@ -8,7 +8,7 @@ namespace hogar_petfecto_api.Models
         {
         }
 
-        public Producto(string descripcion, int stock, decimal precio, Categoria categoria, string imagen, string titulo, Protectora protectora, int protectoraId)
+        public Producto(string descripcion, int stock, decimal precio, Categoria categoria, string imagen, string titulo, Protectora protectora, int protectoraId, bool activo)
         {
             Descripcion = descripcion;
             Stock = stock;
@@ -18,6 +18,7 @@ namespace hogar_petfecto_api.Models
             Titulo = titulo;
             Protectora = protectora;
             ProtectoraId = protectoraId;
+            Activo = activo;
         }
 
         public int Id { get; private set; }
@@ -30,6 +31,7 @@ namespace hogar_petfecto_api.Models
         public string Imagen { get; private set; }
         public Protectora Protectora { get; private set; }
         public int ProtectoraId { get; private set; }
+        public bool Activo { get; private set; }
 
 
         public void Update(string descripcion, int stock, decimal precio, Categoria categoria, string imagen, string titulo)
@@ -46,6 +48,12 @@ namespace hogar_petfecto_api.Models
         {
 
             Stock = stock;
+
+        }
+        public void UpdateState(bool state)
+        {
+
+            Activo = state;
 
         }
     }

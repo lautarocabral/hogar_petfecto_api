@@ -21,19 +21,6 @@ namespace hogar_petfecto_api.Services
 
             try
             {
-                TipoPerfil tipoPerfilAdoptante = await _context.TiposPerfil.FirstOrDefaultAsync(p => p.Descripcion == "Adoptante");
-
-
-                Adoptante newAdoptante = new Adoptante(tipoPerfilAdoptante, adoptanteDto.EstadoCivil, adoptanteDto.Ocupacion,
-                    adoptanteDto.ExperienciaMascotas, adoptanteDto.NroMascotas);
-
-                var grupo = await _context.Grupos.Include(g => g.Permisos).FirstOrDefaultAsync(g => g.Id == 3); // el usuario se registra con id 2 que corresponde a ADOPTANTE
-                if (grupo == null)
-                {
-                    throw new KeyNotFoundException("Grupo no encontrado.");
-                }
-
-                List<Grupo> grupos = new List<Grupo> { grupo };
 
                 var usuarioExistente = await _context.Usuarios
                                             .Include(u => u.Persona)
@@ -45,6 +32,21 @@ namespace hogar_petfecto_api.Services
                                             .Include(u => u.Grupos)
                                                 .ThenInclude(g => g.Permisos)
                                             .FirstOrDefaultAsync(u => u.Id == userId); // seteo el perfil al usuario que se cargo como adoptante
+
+                TipoPerfil tipoPerfilAdoptante = await _context.TiposPerfil.FirstOrDefaultAsync(p => p.Descripcion == "Adoptante");
+
+
+                Adoptante newAdoptante = new Adoptante(tipoPerfilAdoptante, adoptanteDto.EstadoCivil, adoptanteDto.Ocupacion,
+                    adoptanteDto.ExperienciaMascotas, adoptanteDto.NroMascotas, usuarioExistente.Persona);
+
+                var grupo = await _context.Grupos.Include(g => g.Permisos).FirstOrDefaultAsync(g => g.Id == 3); // el usuario se registra con id 2 que corresponde a ADOPTANTE
+                if (grupo == null)
+                {
+                    throw new KeyNotFoundException("Grupo no encontrado.");
+                }
+
+                List<Grupo> grupos = new List<Grupo> { grupo };
+
 
 
                 // VALIDO SI YA TIENE UN PERFIL ACOPTANTE CARGADO para pisarlo si fue asi
@@ -95,9 +97,20 @@ namespace hogar_petfecto_api.Services
         {
             try
             {
+                var usuarioExistente = await _context.Usuarios
+                                           .Include(u => u.Persona)
+                                               .ThenInclude(p => p.Localidad)
+                                                   .ThenInclude(l => l.Provincia)
+                                           .Include(u => u.Persona)
+                                               .ThenInclude(p => p.Perfiles)
+                                                   .ThenInclude(perfil => perfil.TipoPerfil)
+                                           .Include(u => u.Grupos)
+                                               .ThenInclude(g => g.Permisos)
+                                           .FirstOrDefaultAsync(u => u.Id == userId); // seteo el perfil al usuario que se cargo como CLIENTE
+
                 TipoPerfil tipoPerfilCliente = await _context.TiposPerfil.FirstOrDefaultAsync(p => p.Descripcion == "Cliente");
 
-                Cliente newCliente = new Cliente(tipoPerfilCliente, clienteDto.Cuil, clienteDto.Ocupacion);
+                Cliente newCliente = new Cliente(tipoPerfilCliente, clienteDto.Cuil, clienteDto.Ocupacion, usuarioExistente.Persona);
 
                 var grupo = await _context.Grupos.Include(g => g.Permisos).FirstOrDefaultAsync(g => g.Id == 4); // el usuario se registra con id 2 que corresponde a CLIENTE
                 if (grupo == null)
@@ -105,17 +118,6 @@ namespace hogar_petfecto_api.Services
                     throw new KeyNotFoundException("Grupo no encontrado.");
                 }
                 List<Grupo> grupos = new List<Grupo> { grupo };
-
-                var usuarioExistente = await _context.Usuarios
-                                            .Include(u => u.Persona)
-                                                .ThenInclude(p => p.Localidad)
-                                                    .ThenInclude(l => l.Provincia)
-                                            .Include(u => u.Persona)
-                                                .ThenInclude(p => p.Perfiles)
-                                                    .ThenInclude(perfil => perfil.TipoPerfil)
-                                            .Include(u => u.Grupos)
-                                                .ThenInclude(g => g.Permisos)
-                                            .FirstOrDefaultAsync(u => u.Id == userId); // seteo el perfil al usuario que se cargo como CLIENTE
 
 
 
@@ -166,9 +168,21 @@ namespace hogar_petfecto_api.Services
         {
             try
             {
+
+                var usuarioExistente = await _context.Usuarios
+                                           .Include(u => u.Persona)
+                                               .ThenInclude(p => p.Localidad)
+                                                   .ThenInclude(l => l.Provincia)
+                                           .Include(u => u.Persona)
+                                               .ThenInclude(p => p.Perfiles)
+                                                   .ThenInclude(perfil => perfil.TipoPerfil)
+                                           .Include(u => u.Grupos)
+                                               .ThenInclude(g => g.Permisos)
+                                           .FirstOrDefaultAsync(u => u.Id == userId); // seteo el perfil al usuario que se cargo como Protectora
+
                 TipoPerfil tipoPerfilProtectora = await _context.TiposPerfil.FirstOrDefaultAsync(p => p.Descripcion == "Protectora");
 
-                Protectora newProtectora = new Protectora(tipoPerfilProtectora, protectoraDto.Capacidad, protectoraDto.NroVoluntarios, new List<Pedido>(), new List<Producto>(), new List<Mascota>(), protectoraDto.CantidadInicialMascotas);
+                Protectora newProtectora = new Protectora(tipoPerfilProtectora, protectoraDto.Capacidad, protectoraDto.NroVoluntarios, new List<Pedido>(), new List<Producto>(), new List<Mascota>(), protectoraDto.CantidadInicialMascotas, usuarioExistente.Persona);
 
                 var grupo = await _context.Grupos.Include(g => g.Permisos).FirstOrDefaultAsync(g => g.Id == 6); // el usuario se registra con id 2 que corresponde a Protectora
                 if (grupo == null)
@@ -177,16 +191,7 @@ namespace hogar_petfecto_api.Services
                 }
                 List<Grupo> grupos = new List<Grupo> { grupo };
 
-                var usuarioExistente = await _context.Usuarios
-                                            .Include(u => u.Persona)
-                                                .ThenInclude(p => p.Localidad)
-                                                    .ThenInclude(l => l.Provincia)
-                                            .Include(u => u.Persona)
-                                                .ThenInclude(p => p.Perfiles)
-                                                    .ThenInclude(perfil => perfil.TipoPerfil)
-                                            .Include(u => u.Grupos)
-                                                .ThenInclude(g => g.Permisos)
-                                            .FirstOrDefaultAsync(u => u.Id == userId); // seteo el perfil al usuario que se cargo como Protectora
+
 
                 // VALIDO SI YA TIENE UN PERFIL Protectora CARGADO para pisarlo si fue asi
                 var perfilExistente = usuarioExistente.Persona.Perfiles
@@ -236,6 +241,17 @@ namespace hogar_petfecto_api.Services
         {
             try
             {
+                var usuarioExistente = await _context.Usuarios
+                                          .Include(u => u.Persona)
+                                              .ThenInclude(p => p.Localidad)
+                                                  .ThenInclude(l => l.Provincia)
+                                          .Include(u => u.Persona)
+                                              .ThenInclude(p => p.Perfiles)
+                                                  .ThenInclude(perfil => perfil.TipoPerfil)
+                                          .Include(u => u.Grupos)
+                                              .ThenInclude(g => g.Permisos)
+                                          .FirstOrDefaultAsync(u => u.Id == userId); // seteo el perfil al usuario que se cargo como Veterinaria
+
                 TipoPerfil tipoPerfilVeterinaria = await _context.TiposPerfil.FirstOrDefaultAsync(p => p.Descripcion == "Veterinaria");
 
                 var tipoPlan = TipoPlan.Mensual;
@@ -257,7 +273,7 @@ namespace hogar_petfecto_api.Services
                     veterinariaDto.DireccionLocal,
                     new List<Oferta>(),
                     veterinariaDto.Nombre,
-                    veterinariaDto.Telefono
+                    veterinariaDto.Telefono, usuarioExistente.Persona
                 );
 
                 // Crear suscripciones asociadas a la veterinaria
@@ -283,16 +299,7 @@ namespace hogar_petfecto_api.Services
                 }
                 List<Grupo> grupos = new List<Grupo> { grupo };
 
-                var usuarioExistente = await _context.Usuarios
-                                            .Include(u => u.Persona)
-                                                .ThenInclude(p => p.Localidad)
-                                                    .ThenInclude(l => l.Provincia)
-                                            .Include(u => u.Persona)
-                                                .ThenInclude(p => p.Perfiles)
-                                                    .ThenInclude(perfil => perfil.TipoPerfil)
-                                            .Include(u => u.Grupos)
-                                                .ThenInclude(g => g.Permisos)
-                                            .FirstOrDefaultAsync(u => u.Id == userId); // seteo el perfil al usuario que se cargo como Veterinaria
+
 
                 // VALIDO SI YA TIENE UN PERFIL Veterinaria CARGADO para pisarlo si fue asi
                 var perfilExistente = usuarioExistente.Persona.Perfiles

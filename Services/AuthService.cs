@@ -83,7 +83,7 @@ namespace hogar_petfecto_api.Services
 
             var nuevaLocalidad = await _context.Localidades.FirstOrDefaultAsync(l => l.Id == signUpDtoRequest.LocalidadId);
 
-            var nuevoUsuario = new Usuario(signUpDtoRequest.Email, HashPassword(signUpDtoRequest.Password), grupos, new Persona(signUpDtoRequest.Dni, signUpDtoRequest.RazonSocial, nuevaLocalidad, signUpDtoRequest.Direccion, signUpDtoRequest.Telefono, signUpDtoRequest.FechaNacimiento, new List<Perfil>()), new List<int>());
+            var nuevoUsuario = new Usuario(signUpDtoRequest.Email, HashPassword(signUpDtoRequest.Password), grupos, new Persona(signUpDtoRequest.Dni, signUpDtoRequest.RazonSocial, nuevaLocalidad, signUpDtoRequest.Direccion, signUpDtoRequest.Telefono, signUpDtoRequest.FechaNacimiento, new List<Perfil>()), new List<int>(), true);
 
             _context.Usuarios.Add(nuevoUsuario);
 
@@ -143,18 +143,19 @@ namespace hogar_petfecto_api.Services
             .ThenInclude(l => l.Provincia)
     .Include(u => u.Persona)
         .ThenInclude(p => p.Perfiles)
-            .ThenInclude(perfil => perfil.TipoPerfil) 
+            .ThenInclude(perfil => perfil.TipoPerfil)
     .Include(u => u.Grupos)
         .ThenInclude(g => g.Permisos)
     .FirstOrDefaultAsync(u => u.Email == email);
 
 
             // Si el usuario no existe o la contraseña es incorrecta, retorna null
-            if (usuarioExistente == null || !VerifyPassword(contraseña, usuarioExistente.Contraseña))
+            if (usuarioExistente == null ||
+               !VerifyPassword(contraseña, usuarioExistente.Contraseña) ||
+               !usuarioExistente.UserActivo)
             {
                 return null;
             }
-
             // Si las credenciales son válidas, retorna el objeto Usuario
             return usuarioExistente;
         }

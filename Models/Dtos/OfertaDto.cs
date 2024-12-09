@@ -6,14 +6,14 @@ namespace hogar_petfecto_api.Models.Dtos
 {
     public class OfertaDto
     {
-        public int Id { get; private set; }
-        public string Producto { get; private set; }
-        public string Imagen { get; private set; }
-        public string Titulo { get; private set; }
-        public string Descripcion { get; private set; }
-        public double Descuento { get; private set; }
-        public DateTime FechaInicio { get; private set; }
-        public DateTime FechaFin { get; private set; }
-        public bool Activo { get; private set; }
+        public int Id { get; set; }
+        public string Producto { get; set; }
+        public string Imagen { get; set; }
+        public string Titulo { get; set; }
+        public string Descripcion { get; set; }
+        public double Descuento { get; set; }
+        public DateTime FechaInicio { get; set; }
+        public DateTime FechaFin { get; set; }
+        public bool Activo { get; set; }
     }
 }

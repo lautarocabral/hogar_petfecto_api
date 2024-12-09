@@ -101,6 +101,6 @@ namespace alumnos_api.Models
         public DbSet<TipoPerfil> TiposPerfil { get; set; }
         public DbSet<TipoMascota> TiposMascota { get; set; }
 
-
+        public DbSet<Event> Events { get; set; }
     }
 }

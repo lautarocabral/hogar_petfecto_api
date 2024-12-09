@@ -2,9 +2,9 @@
 {
     public class Adoptante : Perfil
     {
-        private Adoptante() : base(default) { }
-        public Adoptante(TipoPerfil tipoPerfil, string estadoCivil, string ocupacion, bool experienciaMascotas, int nroMascotas)
-            : base(tipoPerfil)
+        private Adoptante() : base() { }
+        public Adoptante(TipoPerfil tipoPerfil, string estadoCivil, string ocupacion, bool experienciaMascotas, int nroMascotas, Persona persona)
+            : base(tipoPerfil, persona)
         {
             EstadoCivil = estadoCivil;
             Ocupacion = ocupacion;

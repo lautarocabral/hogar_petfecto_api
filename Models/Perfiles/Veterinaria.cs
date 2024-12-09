@@ -2,9 +2,9 @@
 {
     public class Veterinaria : Perfil
     {
-        private Veterinaria() : base(default) { }
-        public Veterinaria(TipoPerfil tipoPerfil, double latitud, double longitud, List<Suscripcion> suscripciones, string direccionLocal, List<Oferta> ofertas, string nombre, string telefono)
-            : base(tipoPerfil)
+        private Veterinaria() : base() { }
+        public Veterinaria(TipoPerfil tipoPerfil, double latitud, double longitud, List<Suscripcion> suscripciones, string direccionLocal, List<Oferta> ofertas, string nombre, string telefono, Persona persona)
+            : base(tipoPerfil, persona)
         {
             Latitud = latitud;
             Longitud = longitud;

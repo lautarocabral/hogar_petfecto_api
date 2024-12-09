@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using alumnos_api.Models;
 
@@ -11,9 +12,11 @@ using alumnos_api.Models;
 namespace hogar_petfecto_api.Migrations
 {
     [DbContext(typeof(GestionDbContext))]
-    partial class GestionDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241209010210_ActivePropMascotaAndProd")]
+    partial class ActivePropMascotaAndProd
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -529,32 +532,6 @@ namespace hogar_petfecto_api.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Provincias");
-                });
-
-            modelBuilder.Entity("hogar_petfecto_api.Models.Seguridad.Event", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Detalle")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("Fecha")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("ModuloId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Events");
                 });
 
             modelBuilder.Entity("hogar_petfecto_api.Models.Seguridad.Grupo", b =>

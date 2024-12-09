@@ -67,7 +67,7 @@ namespace hogar_petfecto_api.Controllers
                     .OfType<Protectora>()
                     .FirstOrDefault();
 
-            var mascotas = protectoraProfile.Mascotas;
+            var mascotas = protectoraProfile.Mascotas.Where(m => m.Activo == true).ToList();
 
             var mascotaDto = _mapper.Map<List<MascotaDto>>(mascotas);
 
@@ -129,7 +129,7 @@ namespace hogar_petfecto_api.Controllers
                               mascota.Descripcion,
                               mascota.Vacunado,
                               false,
-                              mascota.Imagen, protectoraProfile.Id, protectoraProfile
+                              mascota.Imagen, protectoraProfile.Id, protectoraProfile, true
                               ));
 
             await _context.SaveChangesAsync();
@@ -222,7 +222,7 @@ namespace hogar_petfecto_api.Controllers
             }
 
             // Remove the Mascota and save changes
-            protectoraProfile.Mascotas.Remove(mascotaToDelete);
+            mascotaToDelete.UpdateState(false);
             await _context.SaveChangesAsync();
 
             var mascotaDto = _mapper.Map<List<MascotaDto>>(protectoraProfile.Mascotas);
@@ -358,7 +358,14 @@ namespace hogar_petfecto_api.Controllers
             ////////////VALIDA PERMISO DE USUARIO//////////////////////////////////////////////////////////
             //AUTH/////////////////////////////////////////////////////////////////////////////////
 
-            var mascotas = await _context.Mascotas.Include(t => t.TipoMascota).ToListAsync();
+
+            var mascotas = await _context.Mascotas
+                .Include(m => m.TipoMascota) // Incluir el tipo de mascota
+                .Where(m => m.Protectora != null && // Asegurar que la protectora exista
+                            m.Protectora.Persona.Usuario != null && // Verificar el usuario relacionado
+                            m.Protectora.Persona.Usuario.UserActivo && m.Activo == true) // Solo usuarios activos
+                .ToListAsync();
+
 
             var mascotaDto = _mapper.Map<List<MascotaDto>>(mascotas);
 

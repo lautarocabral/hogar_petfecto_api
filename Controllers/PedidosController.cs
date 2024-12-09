@@ -21,6 +21,7 @@ using iTextSharp.text;
 using iTextSharp.text.pdf;
 using iTextSharp.text.pdf.draw;
 using Font = iTextSharp.text.Font;
+using hogar_petfecto_api.Models.Seguridad;
 
 namespace hogar_petfecto_api.Controllers
 {
@@ -140,6 +141,8 @@ namespace hogar_petfecto_api.Controllers
                     _context.Pedidos.Add(p);
 
                 }
+
+                _context.Events.Add(new Event(usuario.Id, "Venta", 4, DateTime.Now)); //Para auditoria
 
                 await _context.SaveChangesAsync();
 

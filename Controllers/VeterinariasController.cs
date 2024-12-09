@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using hogar_petfecto_api.Models.Dtos.Request;
+using hogar_petfecto_api.Models.Seguridad;
 
 namespace hogar_petfecto_api.Controllers
 {
@@ -327,7 +328,7 @@ namespace hogar_petfecto_api.Controllers
 
                 var perfilesVeterinarias = usuariosVeterinaria
                     .SelectMany(u => u.Persona.Perfiles)
-                    .OfType<Veterinaria>().Where(s=>s.Suscripciones.OrderByDescending(s => s.Id).FirstOrDefault().Estado == true) //Traigo las que tienen suscriupcion activa
+                    .OfType<Veterinaria>().Where(s => s.Suscripciones.OrderByDescending(s => s.Id).FirstOrDefault().Estado == true) //Traigo las que tienen suscriupcion activa
                     .ToList();
 
                 if (!perfilesVeterinarias.Any())
@@ -353,5 +354,101 @@ namespace hogar_petfecto_api.Controllers
                 return Ok(ApiResponse<Exception>.Error(e.Message));
             }
         }
+
+        [HttpGet("QrDecode/{dni}")]
+        public async Task<IActionResult> QrDecode(string dni)
+        {
+            try
+            {
+                // AUTH/////////////////////////////////////////////////////////////////////////////////
+                var claimsPrincipal = _unitOfWork.AuthService.GetClaimsPrincipalFromToken(HttpContext);
+                if (claimsPrincipal == null)
+                {
+                    return Unauthorized(ApiResponse<string>.Error("Token inválido", 401));
+                }
+                var userId = claimsPrincipal.FindFirst("userId")?.Value;
+                var usuario = await _unitOfWork.AuthService.ReturnUsuario(userId);
+                var token = _unitOfWork.AuthService.GenerarToken(usuario);
+                ////////////VALIDA PERMISO DE USUARIO//////////////////////////////////////////////////////////
+                bool hasPermiso = usuario.Grupos.Any(grupo => grupo.Permisos.Any(p => p.Id == 3));
+
+                if (!hasPermiso)
+                {
+                    return Unauthorized(ApiResponse<string>.Error("No tiene permisos para QrDecode", 401));
+                }
+                ////////////VALIDA PERMISO DE USUARIO//////////////////////////////////////////////////////////
+                //AUTH/////////////////////////////////////////////////////////////////////////////////
+
+
+                var user = await _context.Usuarios.Include(p => p.Persona).FirstOrDefaultAsync(u => u.Persona.Dni == dni);
+
+                if (user == null)
+                {
+                    return Ok(ApiResponse<string>.Error("Descuento Invalido"));
+                }
+                _context.Events.Add(new Event(usuario.Id, $"Descuento aplicado a userId {dni}", 3, DateTime.Now));
+
+                await _context.SaveChangesAsync();
+
+                return Ok(ApiResponse<string>.Success("QR escaneado con exito"));
+            }
+            catch (Exception e)
+            {
+
+                return Ok(ApiResponse<Exception>.Error(e.Message));
+            }
+        }
+
+        [HttpGet("GetOfertas")]
+        public async Task<IActionResult> GetOfertas()
+        { 
+            try
+            {
+                // AUTH/////////////////////////////////////////////////////////////////////////////////
+                var claimsPrincipal = _unitOfWork.AuthService.GetClaimsPrincipalFromToken(HttpContext);
+                if (claimsPrincipal == null)
+                {
+                    return Unauthorized(ApiResponse<string>.Error("Token inválido", 401));
+                }
+                var userId = claimsPrincipal.FindFirst("userId")?.Value;
+                var usuario = await _unitOfWork.AuthService.ReturnUsuario(userId);
+                var token = _unitOfWork.AuthService.GenerarToken(usuario);
+                ////////////VALIDA PERMISO DE USUARIO//////////////////////////////////////////////////////////
+                bool hasPermiso = usuario.Grupos.Any(grupo => grupo.Permisos.Any(p => p.Id == 3));
+
+                if (!hasPermiso)
+                {
+                    return Unauthorized(ApiResponse<string>.Error("No tiene permisos para QrDecode", 401));
+                }
+                //////////VALIDA PERMISO DE USUARIO//////////////////////////////////////////////////////////
+                //AUTH/////////////////////////////////////////////////////////////////////////////////
+
+
+                var ofertas = await _context.Ofertas.Include(p => p.Veterinaria).ThenInclude(p=>p.Persona).Where(u => u.Veterinaria.Persona.Dni == usuario.PersonaDni
+                ).ToListAsync();
+
+                if (ofertas == null)
+                {
+                    return Ok(ApiResponse<string>.Error("No se encontraron ofertas"));
+                }
+
+                var ofertasDto = _mapper.Map<List<OfertaDto>>(ofertas);
+
+                var response = new OfertasResponseDto
+                {
+                    token = token,
+                    Ofertas = ofertasDto
+                };
+
+                return Ok(ApiResponse<OfertasResponseDto>.Success(response));
+
+            }
+            catch (Exception e)
+            {
+
+                return Ok(ApiResponse<Exception>.Error(e.Message));
+            }
+        }
+
     }
 }

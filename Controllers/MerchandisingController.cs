@@ -89,7 +89,7 @@ namespace hogar_petfecto_api.Controllers
                   merchandisingRequestDto.Precio,
                   categoria, merchandisingRequestDto.Imagen,
                   merchandisingRequestDto.Titulo,
-                  protectoraPerfil, protectoraPerfil.Id);
+                  protectoraPerfil, protectoraPerfil.Id, true);
 
                 protectoraPerfil.Productos.Add(newProducto);
 
@@ -353,8 +353,7 @@ namespace hogar_petfecto_api.Controllers
 
                 if (producto == null) return Ok(ApiResponse<string>.Error("No existe el producto"));
 
-
-                adoptantePerfil.Productos.Remove(producto);
+                producto.UpdateState(false);
 
                 await _context.SaveChangesAsync();
 
@@ -399,9 +398,12 @@ namespace hogar_petfecto_api.Controllers
                 //AUTH/////////////////////////////////////////////////////////////////////////////////
                 var productos = await _context.Productos
                          .Include(p => p.Categoria)
-                         .Include(p => p.Protectora) // Incluye la relación Protectora directamente
-                         .Where(p => p.Stock > 0)
+                         .Include(p => p.Protectora).ThenInclude(a => a.Persona).ThenInclude(a => a.Usuario) // Incluye la relación Protectora directamente
+                         .Where(p => p.Stock > 0 && p.Activo == true)
                          .ToListAsync();
+
+
+                var filteredProductos = productos.Where(m => m.Protectora.Persona.Usuario.UserActivo == true).ToList();
 
                 if (productos == null)
                 {
@@ -409,7 +411,7 @@ namespace hogar_petfecto_api.Controllers
                 }
 
                 // Mapea los productos a ProductoDto
-                var productosDtos = _mapper.Map<List<ProductoDto>>(productos);
+                var productosDtos = _mapper.Map<List<ProductoDto>>(filteredProductos);
 
                 // Carga todos los usuarios con sus perfiles en memoria
                 var protectoraUsuarios = await _context.Usuarios

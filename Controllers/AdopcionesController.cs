@@ -166,10 +166,12 @@ namespace hogar_petfecto_api.Controllers
 
             var postulaciones = await _context.Postulaciones
 
-                .Include(a => a.Adoptante).Include(a => a.Mascota).Include(a => a.Estado).
+                .Include(a => a.Adoptante).Include(a => a.Mascota).ThenInclude(a=>a.Protectora).ThenInclude(a => a.Persona).ThenInclude(a => a.Usuario).Include(a => a.Estado).
                 Where(p => p.Adoptante.Id == adoptanteOProtectoraId).ToListAsync();
 
-            var postulacionesDto = _mapper.Map<List<PostulacionDto>>(postulaciones);
+            var filteredPostulaciones = postulaciones.Where(m => m.Mascota.Protectora.Persona.Usuario.UserActivo == true).ToList();
+
+            var postulacionesDto = _mapper.Map<List<PostulacionDto>>(filteredPostulaciones);
             var response = new PostulacionesResponseDto
             {
                 token = token,

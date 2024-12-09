@@ -2,7 +2,7 @@
 {
     public class Protectora : Perfil
     {
-        private Protectora() : base(default) { }
+        private Protectora() : base() { }
 
         public Protectora(
             TipoPerfil tipoPerfil,
@@ -11,8 +11,8 @@
             List<Pedido> pedidos,
             List<Producto> productos,
             List<Mascota> mascotas,
-            int cantidadInicialMascotas)
-            : base(tipoPerfil)
+            int cantidadInicialMascotas, Persona persona)
+            : base(tipoPerfil, persona)
         {
             Capacidad = capacidad;
             NroVoluntarios = nroVoluntarios;

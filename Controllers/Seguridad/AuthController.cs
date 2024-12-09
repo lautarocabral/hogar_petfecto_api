@@ -61,6 +61,9 @@ namespace hogar_petfecto_api.Controllers.Seguridad
                 UsuarioResponseDto = usuarioDto
             };
 
+            _context.Events.Add(new Event(usuario.Id, "Login", 9, DateTime.Now)); //Para auditoria
+            await _context.SaveChangesAsync();
+
             return Ok(ApiResponse<LoginResponseDto>.Success(response));
         }
 
@@ -191,7 +194,7 @@ namespace hogar_petfecto_api.Controllers.Seguridad
             {
                 var resultado = await _context.Usuarios
                .Include(p => p.Persona).ThenInclude(per => per.Perfiles).ThenInclude(per => per.TipoPerfil).Include(p => p.Persona).ThenInclude(l => l.Localidad).ThenInclude(l => l.Provincia)
-               .Include(g => g.Grupos).ThenInclude(m => m.Permisos).ToListAsync();
+               .Include(g => g.Grupos).ThenInclude(m => m.Permisos).Where(u => u.UserActivo == true).ToListAsync();
 
                 var usuariosDto = _mapper.Map<List<UsuarioDto>>(resultado);
 
@@ -385,21 +388,25 @@ namespace hogar_petfecto_api.Controllers.Seguridad
                     return NotFound(ApiResponse<string>.Error("Usuario no encontrado", 404));
                 }
 
-                // Manejar relaciones con mascotas
-                if (usuarioAEliminar.Persona.Perfiles.OfType<Protectora>().Any())
-                {
-                    var protectoraPerfil = usuarioAEliminar.Persona.Perfiles.OfType<Protectora>().First();
+                //// Manejar relaciones con mascotas
+                //if (usuarioAEliminar.Persona.Perfiles.OfType<Protectora>().Any())
+                //{
+                //    var protectoraPerfil = usuarioAEliminar.Persona.Perfiles.OfType<Protectora>().First();
 
-                    var mascotasAsociadas = await _context.Mascotas
-                        .Where(m => m.ProtectoraId == protectoraPerfil.Id)
-                        .ToListAsync();
+                //    var mascotasAsociadas = await _context.Mascotas
+                //        .Where(m => m.ProtectoraId == protectoraPerfil.Id)
+                //        .ToListAsync();
 
-                    // Eliminar mascotas asociadas
-                    _context.Mascotas.RemoveRange(mascotasAsociadas);
-                }
+                //    // Eliminar mascotas asociadas
+                //    _context.Mascotas.RemoveRange(mascotasAsociadas);
+                //}
 
-                // Eliminar el usuario
-                _context.Usuarios.Remove(usuarioAEliminar);
+                //// Eliminar el usuario
+                //_context.Usuarios.Remove(usuarioAEliminar);
+
+                // USO BAJA LOGICA PARA ELIMINAR UN USUARIO
+                usuarioAEliminar.UpdateUserActiveState(false);
+
                 await _context.SaveChangesAsync();
 
                 var usuarioDto = _mapper.Map<UsuarioDto>(usuario);
@@ -599,6 +606,143 @@ namespace hogar_petfecto_api.Controllers.Seguridad
 
             return Ok(ApiResponse<string>.Success("Clave recuperada con exito"));
         }
+
+        [HttpGet("GetEvents")]
+        public async Task<IActionResult> GetEvents()
+        {
+            // AUTH/////////////////////////////////////////////////////////////////////////////////
+            var claimsPrincipal = _unitOfWork.AuthService.GetClaimsPrincipalFromToken(HttpContext);
+            if (claimsPrincipal == null)
+            {
+                return Unauthorized(ApiResponse<string>.Error("Token inválido", 401));
+            }
+            var userId = claimsPrincipal.FindFirst("userId")?.Value;
+            var usuario = await _unitOfWork.AuthService.ReturnUsuario(userId);
+            var token = _unitOfWork.AuthService.GenerarToken(usuario);
+            ////////////VALIDA PERMISO DE USUARIO//////////////////////////////////////////////////////////
+            bool hasPermiso = usuario.Grupos.Any(grupo => grupo.Permisos.Any(p => p.Id == 9));
+
+            if (!hasPermiso)
+            {
+                return Unauthorized(ApiResponse<string>.Error("No tiene permisos para obtener permisos", 401));
+            }
+            ////////////VALIDA PERMISO DE USUARIO//////////////////////////////////////////////////////////
+            //AUTH/////////////////////////////////////////////////////////////////////////////////
+
+            var entity = await _context.Events.ToListAsync();
+
+            List<EventDto> eventResponseDTOs = new List<EventDto>();
+
+            foreach (var audit in entity)
+            {
+                var user = await _context.Usuarios.Include(p=>p.Persona).FirstOrDefaultAsync(
+                u => u.Id == audit.UserId);
+                var formulario = await _context.Permisos.FirstOrDefaultAsync(p => p.Id == audit.ModuloId);
+                eventResponseDTOs.Add(new EventDto(audit.Id, user.Persona.RazonSocial, user.Email, audit.Detalle, formulario.NombrePermiso, audit.Fecha));
+
+            }
+
+            if (eventResponseDTOs == null)
+            {
+                return NotFound(ApiResponse<string>.Error($"No se encontraron Events", 404));
+            }
+
+            var response = new EventsResponseDto
+            {
+                token = token,
+                Events = eventResponseDTOs
+            };
+
+            return Ok(ApiResponse<EventsResponseDto>.Success(response));
+        }
+
+
+        [HttpGet("GetReport")]
+        public async Task<IActionResult> GetReport()
+        {
+            // AUTH/////////////////////////////////////////////////////////////////////////////////
+            var claimsPrincipal = _unitOfWork.AuthService.GetClaimsPrincipalFromToken(HttpContext);
+            if (claimsPrincipal == null)
+            {
+                return Unauthorized(ApiResponse<string>.Error("Token inválido", 401));
+            }
+            var userId = claimsPrincipal.FindFirst("userId")?.Value;
+            var usuario = await _unitOfWork.AuthService.ReturnUsuario(userId);
+            var token = _unitOfWork.AuthService.GenerarToken(usuario);
+            ////////////VALIDA PERMISO DE USUARIO//////////////////////////////////////////////////////////
+            bool hasPermiso = usuario.Grupos.Any(grupo => grupo.Permisos.Any(p => p.Id == 9));
+
+            if (!hasPermiso)
+            {
+                return Unauthorized(ApiResponse<string>.Error("No tiene permisos para obtener permisos", 401));
+            }
+            ////////////VALIDA PERMISO DE USUARIO//////////////////////////////////////////////////////////
+            //AUTH/////////////////////////////////////////////////////////////////////////////////
+
+            var ventas = await _context.Pedidos.Include(m => m.LineaPedido).ThenInclude(m => m.Producto).Include(m => m.Cliente).Include(a => a.Protectora).ThenInclude(a => a.Persona).ThenInclude(a => a.Usuario).ToListAsync();
+
+
+            if (ventas == null)
+            {
+                return NotFound(ApiResponse<string>.Error($"No se encontraron ventas", 404));
+            }
+
+
+            var reporte = ventas
+                          .GroupBy(p => p.Protectora.Persona.Usuario.Persona.RazonSocial)
+                          .Select(g => new ReporteUsuarioDto
+                          {
+                              UsuarioNombre = g.Key,
+                              CantidadDePedidos = g.Count(),
+                              Total = g.Sum(v => v.LineaPedido.Sum(lv => lv.Producto.Precio * lv.Cantidad)) * 1.15m
+                          })
+                          .ToList();
+
+            var response = new ReporteUsuarioResponseDto
+            {
+                token = token,
+                Reportes = reporte
+            };
+
+            return Ok(ApiResponse<ReporteUsuarioResponseDto>.Success(response));
+        }
+
+        [HttpGet("MakeBackup")]
+        public async Task<IActionResult> MakeBackup()
+        {
+            // AUTH/////////////////////////////////////////////////////////////////////////////////
+            var claimsPrincipal = _unitOfWork.AuthService.GetClaimsPrincipalFromToken(HttpContext);
+            if (claimsPrincipal == null)
+            {
+                return Unauthorized(ApiResponse<string>.Error("Token inválido", 401));
+            }
+            var userId = claimsPrincipal.FindFirst("userId")?.Value;
+            var usuario = await _unitOfWork.AuthService.ReturnUsuario(userId);
+            var token = _unitOfWork.AuthService.GenerarToken(usuario);
+            ////////////VALIDA PERMISO DE USUARIO//////////////////////////////////////////////////////////
+            bool hasPermiso = usuario.Grupos.Any(grupo => grupo.Permisos.Any(p => p.Id == 9));
+
+            if (!hasPermiso)
+            {
+                return Unauthorized(ApiResponse<string>.Error("No tiene permisos para obtener permisos", 401));
+            }
+            ////////////VALIDA PERMISO DE USUARIO//////////////////////////////////////////////////////////
+            //AUTH/////////////////////////////////////////////////////////////////////////////////
+
+            try
+            {
+                string backupCommand = @"BACKUP DATABASE [Hogar_Petfecto] TO DISK = N'C:\\Users\\lautaro\\Desktop\\HogarPetfectoBackup.bak'";
+                _context.Database.ExecuteSqlRaw(backupCommand);
+
+                return Ok(ApiResponse<string>.Success("Backup creado con exito"));
+            }
+            catch (Exception e)
+            {
+
+                return Ok(ApiResponse<string>.Error(e.ToString()));
+            }
+        }
+
     }
 
 }
